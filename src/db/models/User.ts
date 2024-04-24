@@ -14,6 +14,12 @@ const userSchema = new Schema(
       minLength: [6, "Must be at least 6 char long"],
       maxLength: [12, "Can't be morethan 12 char long "],
     },
+    role: {
+      type: String,
+      enum: ["admin", "user"],
+      default: "user",
+      required: [true, "Role is required"],
+    },
   },
   { timestamps: true },
 );
