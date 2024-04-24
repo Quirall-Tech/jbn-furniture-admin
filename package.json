@@ -1,0 +1,22 @@
+{
+  "name": "tracker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongosh": "^2.2.5",
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}
