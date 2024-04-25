@@ -11,50 +11,46 @@ export interface IRegisterBody {
 export const registerController = async (req: Request, res: Response) => {
   const body = req.body as IRegisterBody;
 
-  if (!body) return res.status(500).send(stdRes(false, `Can't find body\n`));
+  if (!body) return res.status(500).json(stdRes(false, `Can't find body`));
   if (!body.username)
-    return res.status(400).send(stdRes(false, `Username is required\n`));
+    return res.status(400).json(stdRes(false, `Username is required`));
   if (!body.password)
-    return res.status(400).send(stdRes(false, `Password is required\n`));
+    return res.status(400).json(stdRes(false, `Password is required`));
 
   const user = new User({ username: body.username, password: body.password });
 
   const err = user.validateSync();
 
-  if (!err) {
-    try {
-      await user.save();
-      res.status(200).send(stdRes(false, "Successfully registered"));
-    } catch (e: any) {
-      if (e?.message?.indexOf("duplicate key error") !== -1) {
-        res.status(403).send(stdRes(false, "User already exists"));
-      }
+  if (err) {
+    const errors: Record<string, string> = {};
+
+    for (const [key, val] of Object.entries(err.errors)) {
+      errors[key] = val.message;
     }
-    return;
+
+    return res
+      .status(400)
+      .json(stdRes(false, { message: "Registration failed", errors }));
   }
 
-  const errors: Record<string, string> = {};
-  if (err.errors["username"]?.message) {
-    errors.username = err.errors["username"].message;
+  try {
+    await user.save();
+    res.status(200).json(stdRes(false, "Successfully registered"));
+  } catch (e: any) {
+    if (e?.message?.indexOf("duplicate key error") !== -1) {
+      res.status(403).json(stdRes(false, "User already exists"));
+    }
   }
-
-  if (err.errors["password"]?.message) {
-    errors.password = err.errors["password"].message;
-  }
-
-  res
-    .status(400)
-    .json(stdRes(false, { message: "Registration failed", errors }));
 };
 
 export const loginController = async (req: Request, res: Response) => {
   const body = req.body as IRegisterBody;
 
-  if (!body) return res.status(500).send(stdRes(false, `Can't find body\n`));
+  if (!body) return res.status(500).json(stdRes(false, `Can't find body`));
   if (!body.username)
-    return res.status(400).send(stdRes(false, `Username is required\n`));
+    return res.status(400).json(stdRes(false, `Username is required`));
   if (!body.password)
-    return res.status(400).send(stdRes(false, `Password is required\n`));
+    return res.status(400).json(stdRes(false, `Password is required`));
 
   const user = await User.findOne({ username: body.username });
 
@@ -78,5 +74,5 @@ export const loginController = async (req: Request, res: Response) => {
 
   const token = sign(user.toObject(), key);
 
-  res.status(200).send(stdRes(true, { token }));
+  res.status(200).json(stdRes(true, { token }));
 };
