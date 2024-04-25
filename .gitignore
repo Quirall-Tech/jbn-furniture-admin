@@ -1,4 +1,8 @@
+# Node Configs
 node_modules/
 pnpm-lock.yaml
 .env
 dist/
+
+# Python virtual env
+env
