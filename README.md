@@ -39,3 +39,26 @@ Before you start, ensure you have the following installed:
    ```bash
    npm start
    ```
+
+### Option 2: Running with Docker Using `local.yml`
+
+If you prefer to use Docker to manage your development environment, follow these steps to get started using the `docker-compose` configuration specified in the `local.yml` file.
+
+1. **Prepare Docker Environment**
+   Before you start, ensure that Docker is installed and running on your system. Also, confirm that the `docker-compose.yml` file or a specific `local.yml` file exists in your project that defines your Node.js and MongoDB services.
+
+2. **Open the Project Directory**
+   Navigate to the root directory of your project where the `docker-compose` file is located.
+
+3. **Start the Services**
+   Run the following command in your terminal to start all services defined in your `local.yml` file. This command will build the Docker images if they don't exist and start the containers.
+   ```bash
+   docker-compose -f local.yml up --build
+   ```
+This will start the Node.js application and any other services (like MongoDB) as specified in your Docker configuration. The --build flag ensures that Docker re-builds the images if there have been changes to the Dockerfiles or Docker-compose configurations.
+
+# Access the Application
+
+To access the application, navigate to the `http://localhost:3000` URL in your browser.
+
+### Thank You, We will update the docs as the project grows
