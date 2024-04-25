@@ -1,5 +1,5 @@
 # Use an official Node runtime as a parent image
-FROM node:16
+FROM node:18
 
 WORKDIR /usr/src/app
 
