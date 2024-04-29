@@ -8,6 +8,7 @@ export interface IRegisterBody {
   username?: string;
   password?: string;
 }
+
 export const handleRegister = async (req: Request, res: Response) => {
   const body = req.body as IRegisterBody;
 
@@ -69,8 +70,6 @@ export const handleLogin = async (req: Request, res: Response) => {
   }
 
   const key = process.env.SIGN_KEY;
-
-  if (!key) return;
 
   const token = sign(user.toObject(), key);
 
