@@ -8,7 +8,7 @@ export interface IRegisterBody {
   username?: string;
   password?: string;
 }
-export const registerController = async (req: Request, res: Response) => {
+export const handleRegister = async (req: Request, res: Response) => {
   const body = req.body as IRegisterBody;
 
   if (!body) return res.status(500).json(stdRes(false, `Can't find body`));
@@ -35,7 +35,7 @@ export const registerController = async (req: Request, res: Response) => {
 
   try {
     await user.save();
-    res.status(200).json(stdRes(false, "Successfully registered"));
+    res.status(200).json(stdRes(true, "Successfully registered"));
   } catch (e: any) {
     if (e?.message?.indexOf("duplicate key error") !== -1) {
       res.status(403).json(stdRes(false, "User already exists"));
@@ -43,7 +43,7 @@ export const registerController = async (req: Request, res: Response) => {
   }
 };
 
-export const loginController = async (req: Request, res: Response) => {
+export const handleLogin = async (req: Request, res: Response) => {
   const body = req.body as IRegisterBody;
 
   if (!body) return res.status(500).json(stdRes(false, `Can't find body`));

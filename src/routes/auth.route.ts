@@ -1,16 +1,16 @@
 import { Router } from "express";
 import {
-  loginController,
-  registerController,
+  handleLogin,
+  handleRegister,
 } from "../controllers/auth.controller";
 import { authMiddleWare } from "../middlewares/auth.middleware";
 
 export const router = Router();
 
-router.route("/login").post(loginController);
-router.route("/register").post(registerController);
+router.route("/login").post(handleLogin);
+router.route("/register").post(handleRegister);
 
 // Tobe removed
-router.route("/sample").get(authMiddleWare(["admin"]), (req, res) => {
+router.route("/sample").get(authMiddleWare(["user"]), (req, res) => {
   res.send("success");
 });
