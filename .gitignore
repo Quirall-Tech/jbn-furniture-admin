@@ -4,6 +4,7 @@ pnpm-lock.yaml
 package-lock.json
 .env
 dist/
+*.rest
 
 # Python virtual env
 env
