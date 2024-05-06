@@ -2,11 +2,11 @@ import mongoose, { Schema } from "mongoose";
 
 const materialSchema = new Schema(
   {
-    list: [{
-        list_id:{
+    item: [{
+        item_id:{
             type: mongoose.Types.ObjectId,
-            ref: "List",
-            required: [true, "List id is required"],
+            ref: "Item",
+            required: [true, "Item id is required"],
         },
         quantity: {
             type: Number,

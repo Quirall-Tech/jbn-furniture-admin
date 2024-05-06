@@ -8,6 +8,7 @@ import { authMiddleWare } from "../middlewares/auth.middleware";
 
 export const router = Router();
 
+// ------------ Project api -------------
 router.route("/add").post(addProject);
 router.route("/list").post(getList);
 //edit
@@ -16,3 +17,6 @@ router.route("/:id").put(editProject);
 router.route("/:id").delete(deleteProject);
 //get project
 router.route("/:id").post(getProject);
+
+// ------------- Material api -------------
+router.route("/material/add")

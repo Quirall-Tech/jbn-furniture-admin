@@ -17,4 +17,18 @@ export const DbAddProject = async (body:any)=>{
         throw(err);
     }
 };
+export const DbGetProjectList = async ()=>{
+    try{
+        return await Project.find({}).populate(['client_details']);
+    }catch(err){
+        throw(err);
+    }
+};
+export const DbGetProjectById = async (projectId:string)=>{
+    try{
+        return await Project.findById(projectId).populate(['client_details']);
+    }catch(err){
+        throw(err);
+    }
+};
 

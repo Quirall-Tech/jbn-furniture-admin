@@ -3,6 +3,7 @@ import cors from "cors";
 import { connectDB } from "./src/db/connection";
 import { router as authRouter } from "./src/routes/auth.route";
 import { router as projectRouter } from "./src/routes/project.route";
+import { router as itemRouter } from "./src/routes/item.route";
 import { envVariables } from "./src/config/environments";
 
 import "./src/config/globals";
@@ -19,12 +20,13 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors(corsOptions));
 
 connectDB();
 
 app.use("/auth", authRouter);
 app.use("/project", projectRouter);
+app.use("/item", itemRouter);
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
