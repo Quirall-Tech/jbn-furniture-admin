@@ -2,22 +2,20 @@ import mongoose, { Schema } from "mongoose";
 
 const clientSchema = new Schema(
   {
-    fname: {
+    name: {
       type: String,
       required: [true, "First Name is Required"],
     },
-    lname: {
-      type: String,
-    },
-    mobile: {
+    mob: {
       type: Number,
       unique: true,
       required: [true, "Mobile no is Required"],
     },
     email: {
       type: String,
+      required: [true, "Email is Required"],
     },
-    address: {
+    add: {
       city: {
         type: String,
         required: [true, "City is Required"],
@@ -26,7 +24,7 @@ const clientSchema = new Schema(
         type: String,
         required: [true, "Location or Landmark is Required"],
       },
-      location_link:{
+      link:{
         type:String,
       }
     },

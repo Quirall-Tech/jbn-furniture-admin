@@ -9,9 +9,14 @@ import { envVariables } from "./src/config/environments";
 import "./src/config/globals";
 import "dotenv/config";
 
+envVariables.parse(process.env);
+
+
+
+
+
 const app = express();
 
-envVariables.parse(process.env);
 const corsOptions = {
   origin:["http://localhost:4200","*"],
   credentials:true

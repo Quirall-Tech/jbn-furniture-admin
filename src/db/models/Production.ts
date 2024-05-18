@@ -2,68 +2,40 @@ import mongoose, { Schema } from "mongoose";
 
 const productionSchema = new Schema(
   {
-    status: {
-      type: Number,
-      default: 1,
+    // currentStatus: {
+    //   type: Number,
+    //   default: 1,
+    // },
+    // lastApprovedBy:{
+    //   type: String,
+    // },
+    isCompleted:{
+      type:Boolean
     },
-    supervisor: {
-      type: String,
-      required: true,
-    },
-    workflow_progress: {
-      process1: {
+    productionStatus: {
+      "1": {
         percentCompleted: Number,
-        isCompleted: Boolean,
         isStarted: Boolean,
-        approvedBy: {
-          type: mongoose.Types.ObjectId,
-          ref: "User",
-        },
       },
-      process2: {
+      "2": {
         percentCompleted: Number,
-        isCompleted: Boolean,
         isStarted: Boolean,
-        approvedBy: {
-          type: mongoose.Types.ObjectId,
-          ref: "User",
-        },
       },
-      process3: {
+      "3": {
         percentCompleted: Number,
-        isCompleted: Boolean,
         isStarted: Boolean,
-        approvedBy: {
-          type: mongoose.Types.ObjectId,
-          ref: "User",
-        },
       },
-      process4: {
+      "4": {
         percentCompleted: Number,
-        isCompleted: Boolean,
         isStarted: Boolean,
-        approvedBy: {
-          type: mongoose.Types.ObjectId,
-          ref: "User",
-        },
       },
-      process5: {
+      "5": {
         percentCompleted: Number,
-        isCompleted: Boolean,
         isStarted: Boolean,
-        approvedBy: {
-          type: mongoose.Types.ObjectId,
-          ref: "User",
-        },
       },
-      process6: {
+      "6": {
         percentCompleted: Number,
-        isCompleted: Boolean,
         isStarted: Boolean,
-        approvedBy: {
-          type: mongoose.Types.ObjectId,
-          ref: "User",
-        },
       },
     },
   },

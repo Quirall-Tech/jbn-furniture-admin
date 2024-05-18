@@ -6,7 +6,6 @@ const materialSchema = new Schema(
         item_id:{
             type: mongoose.Types.ObjectId,
             ref: "Item",
-            required: [true, "Item id is required"],
         },
         quantity: {
             type: Number,
@@ -20,8 +19,9 @@ const materialSchema = new Schema(
     }],
     grossTotal: {
       type: Number,
-      default: 0,
-      required: [true, "Gross total is required"],
+    },
+    estimatedDaysOfCompletion:{
+      type: Number,
     },
   },
   { timestamps: true },

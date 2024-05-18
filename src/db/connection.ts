@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 export const connectDB = async () => {
   const dbName = process.env.DB_NAME;
-  const dbHost = process.env.DB_HOST;
-  const dbPort = process.env.DB_PORT;
+  const dbPass = process.env.DB_PASS;
+  const dbUser = process.env.DB_USER;
 
-  return await mongoose.connect(`mongodb://${dbHost}:${dbPort}/${dbName}`);
+  return await mongoose.connect(`mongodb+srv://${dbUser}:${dbPass}@jbn-damakha.h1fuhew.mongodb.net/${dbName}?retryWrites=true&w=majority&appName=jbn-damakha`);
 };

@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { string } from "zod";
 
 const projectSchema = new Schema(
   {
@@ -7,7 +8,11 @@ const projectSchema = new Schema(
         default: 1,
         required: [true,"orderStatus is required"]
     },
-    comments: { 
+    orderNumber: { 
+        type: String, 
+        unique:true,
+    },
+    notes: { 
         type: String, 
     },
     description: { 
@@ -22,7 +27,13 @@ const projectSchema = new Schema(
     estMaterialArrival: { 
         type: Date, 
     },
-    client_details: {
+    transactionDetails:[{
+        transactionId:String,
+        date:Date,
+        amount:Number,
+        paymentType:String,
+    }],
+    client: {
       type: mongoose.Types.ObjectId,
       ref: "Client",
       required:true
@@ -32,8 +43,72 @@ const projectSchema = new Schema(
         ref: "Material",
     },
     attachments: {
-        type: mongoose.Types.ObjectId,
-        ref: "Attachment",
+        drawingFile:[
+            {
+                url:{
+                    type:String,
+                },
+                date:{
+                    type:Date
+                },
+                notes:{
+                    type:String
+                }
+            }
+        ],
+        materialEstimateFile:[
+            {
+                url:{
+                    type:String,
+                },
+                date:{
+                    type:Date
+                },
+                notes:{
+                    type:String
+                }
+            }
+        ],
+        installationFile:[
+            {
+                url:{
+                    type:String,
+                },
+                date:{
+                    type:Date
+                },
+                notes:{
+                    type:String
+                }
+            }
+        ],
+        closingReportFile:[
+            {
+                url:{
+                    type:String,
+                },
+                date:{
+                    type:Date
+                },
+                notes:{
+                    type:String
+                }
+            }
+        ],
+        serviceReportFile:[
+            {
+                url:{
+                    type:String,
+                },
+                date:{
+                    type:Date
+                },
+                notes:{
+                    type:String
+                }
+            }
+        ],
+
     },
     production_details: {
         type: mongoose.Types.ObjectId,
@@ -42,5 +117,30 @@ const projectSchema = new Schema(
   },
   { timestamps: true }
 );
+
+projectSchema.pre("save", async function (next) {
+    if (!this.orderNumber) {
+      // Find the highest order number from existing records
+      const Model = mongoose.model("Project");
+      const highestOrder = await Model.findOne(
+        {},{},
+        { sort: { orderNumber: -1 } }
+      );
+  
+      let orderNumber = "ORD_001"; // Default value for the first order
+  
+      if (highestOrder) {
+        const lastOrderNumber = highestOrder.orderNumber;
+        const lastOrderNumberNumeric = parseInt(lastOrderNumber.split("_")[1]);
+        // Increment the last order number
+        orderNumber = `ORD_${(lastOrderNumberNumeric + 1)
+          .toString()
+          .padStart(3, "0")}`;
+      }
+  
+      this.orderNumber = orderNumber;
+    }
+    next();
+  });
 
 export const Project = mongoose.model("Project", projectSchema);
