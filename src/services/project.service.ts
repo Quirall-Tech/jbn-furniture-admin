@@ -45,7 +45,7 @@ export class ProjectService {
     }
   };
   //one project details
-  getProjectById = async (id:any) => {
+  getProjectById = async (id: any) => {
     try {
       return await getProject(id);
     } catch (err) {
@@ -67,7 +67,7 @@ export class ProjectService {
       const projectId = data.id;
       const file = data.file;
       const project = await addDrawingFile(projectId, file);
-      console.log(project,'-----------')
+      console.log(project, '-----------')
       if (data.isApproved) {
         await this.upgradeOrderStatus(projectId, project?.orderStatus);
       }
@@ -81,27 +81,27 @@ export class ProjectService {
   materialEstimate = async (data: any) => {
     try {
       const projectId = data.id;
-      const project:any = await getProject(projectId);
+      const project: any = await getProject(projectId);
       //items are getting added(if item_id is null) and updated
-      data.item = await Promise.all(data.item.map(async (el:any) => {
+      data.item = await Promise.all(data.item.map(async (el: any) => {
         let item;
         //if item_id exist in data set
         if (el.item_id) {
-            //updates item with given data
-            item = await Item.findByIdAndUpdate(el.item_id, el, { upsert: true, new: true });
+          //updates item with given data
+          item = await Item.findByIdAndUpdate(el.item_id, el, { upsert: true, new: true });
         } else {
-            //creates item with given data
-            item = await Item.create(el);
+          //creates item with given data
+          item = await Item.create(el);
         }
         el.item_id = item._id;
         return el;
-    }));
+      }));
       //if project have existing material_details
       if (project?.material_details) {
         //update material details
         const materialId = project.material_details._id
-        await Material.findOneAndUpdate({ _id:materialId }, data,{new:true});
-    } else {
+        await Material.findOneAndUpdate({ _id: materialId }, data, { new: true });
+      } else {
         //create material details and update to project
         const newMaterial = await Material.create(data);
         await addMaterialIdToProject(projectId, newMaterial._id);
@@ -120,7 +120,7 @@ export class ProjectService {
   orderConfirmation = async (data: any) => {
     try {
       const projectId = data.id;
-      const {transactionId,amount,paymentType} = data;
+      const { transactionId, amount, paymentType } = data;
       const transactionDetails = {
         transactionId,
         date: Date.now(),
@@ -136,8 +136,8 @@ export class ProjectService {
         },
         { new: true }
       );
-      if(data.isApproved){
-        await this.upgradeOrderStatus(projectId,project?.orderStatus);
+      if (data.isApproved) {
+        await this.upgradeOrderStatus(projectId, project?.orderStatus);
       }
       return { message: "data saved successfully" };
     } catch (err) {
@@ -148,39 +148,66 @@ export class ProjectService {
   //material arrival estimate complete (orderStatus=5)
   productionUpdation = async (data: any) => {
     try {
-        const projectId= data.id;
-        const project = await getProject(projectId);
-        if(project?.production_details){
-            const productionDetails:any = project.production_details;
-            await Production.findOneAndUpdate({_id:productionDetails._id},data)
-        }else{
-            const newProductionDetails = await Production.create(data);
-            await addProductionIdToProject(projectId,newProductionDetails._id);
-        }
-        if(data.isApproved){
-            await this.upgradeOrderStatus(projectId,project?.orderStatus);
-        }
-        return { message: "data saved successfully" };
+      const projectId = data.id;
+      const project = await getProject(projectId);
+      if (project?.production_details) {
+        const productionDetails: any = project.production_details;
+        await Production.findOneAndUpdate({ _id: productionDetails._id }, data)
+      } else {
+        const newProductionDetails = await Production.create(data);
+        await addProductionIdToProject(projectId, newProductionDetails._id);
+      }
+      if (data.isApproved) {
+        await this.upgradeOrderStatus(projectId, project?.orderStatus);
+      }
+      return { message: "data saved successfully" };
     } catch (err) {
       console.log("Error occured while entering order");
       throw err;
     }
   };
-  //Production update (orderStatus=2)
-  //Production complete (orderStatus=2)
-  //delivery complete (orderStatus=1)
-  //installation complete (orderStatus=2)
-  //awaiting service complete (orderStatus=2)
-  //service complete (orderStatus=2)
-  //order cancelled complete
-  //order closed complete
+  //arrivalEstimate
+  arrivalEstimate = async (data: any) => {
+    try {
+      const projectId = data.id;
+      const { isArrived, priority, estDateOfArrival } = data
+      const newProject = await Project.findOneAndUpdate({ _id: projectId }, { isArrived, priority, estDateOfArrival }, { new: true });
+      if (data.isApproved) {
+        await this.upgradeOrderStatus(projectId, newProject?.orderStatus);
+      }
+      return { message: "data saved successfully" };
+    } catch (err) {
+      console.log("Error occured while entering order");
+      throw err;
+    }
+  }
+  //delivery
+  deliveryUpdation = async (data: any) => {
+    try {
+      const projectId = data.id;
+      const { driverNumber ,vehicleNumber } = data
+      const newProject = await Project.findOneAndUpdate({ _id: projectId }, { delivery:{ driverNumber ,vehicleNumber } }, { new: true });
+      if (data.isApproved) {
+        await this.upgradeOrderStatus(projectId, newProject?.orderStatus);
+      }
+      return { message: "data saved successfully" };
+    } catch (err) {
+      console.log("Error occured while entering order");
+      throw err;
+    }
+  }
+  //installation
+  //awaiting service
+  //service
+  //close
+  //cancel
 
   upgradeOrderStatus = async (projectId: any, currentStatus: any) => {
-    try{
-        const newStatus = currentStatus + 1;
-        return await updateStatus(projectId, newStatus);
-    }catch(err){
-        throw(err);
+    try {
+      const newStatus = currentStatus + 1;
+      return await updateStatus(projectId, newStatus);
+    } catch (err) {
+      throw (err);
     }
   };
 }

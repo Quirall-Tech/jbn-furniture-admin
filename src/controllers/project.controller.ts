@@ -90,3 +90,25 @@ export const productionUpdates = async (req: Request, res: Response) => {
     res.status(500).json({ status: "Internal Server Error", message: err });
   }
 };
+export const arrivalEstimate = async (req: Request, res: Response) => {
+  try {
+    const projectId = req.params.id;
+    const data = req.body;
+    data.id = projectId;
+    const project = await projectService.arrivalEstimate(data);
+    res.status(200).json({ status: "success", data: project });
+  } catch (err) {
+    res.status(500).json({ status: "Internal Server Error", message: err });
+  }
+};
+export const deliveryUpdate = async (req: Request, res: Response) => {
+  try {
+    const projectId = req.params.id;
+    const data = req.body;
+    data.id = projectId;
+    const project = await projectService.deliveryUpdation(data);
+    res.status(200).json({ status: "success", data: project });
+  } catch (err) {
+    res.status(500).json({ status: "Internal Server Error", message: err });
+  }
+};
