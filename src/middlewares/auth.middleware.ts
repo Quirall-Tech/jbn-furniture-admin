@@ -6,6 +6,7 @@ type User = {
   username: string;
   password: string;
   role: "MD" | "GM" | "HR" | "OM" | "PM" | "SV" | "WR" | "CU" | "US";
+  isBlocked: boolean;
 };
 
 const unAuthorize = (res: Response) => {
@@ -39,6 +40,11 @@ export const authMiddleWare = (roles: ("MD" | "GM" | "HR" | "OM" | "PM" | "SV" |
     }
 
     if (!payload) {
+      unAuthorize(res);
+      return;
+    }
+
+    if(payload.isBlocked){
       unAuthorize(res);
       return;
     }

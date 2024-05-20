@@ -3,13 +3,10 @@ import { addItem, deletedItem, getItem, itemList, updateItem } from "../controll
 import { authMiddleWare } from "../middlewares/auth.middleware";
 
 export const router = Router();
-
+const ADMIN_ACCESS: ("MD" | "GM" | "HR" | "OM" | "PM" | "SV" | "WR" | "CU" | "US")[] = ['MD', 'GM', 'HR'];
 // ------------ Item api -------------
 router.route("/add").post(addItem);
 router.route("/list").post(itemList);
-// //edit
 router.route("/:id").put(updateItem);
-// //delete
 router.route("/:id").delete(deletedItem);
-// //get 
 router.route("/:id").get(getItem);
