@@ -52,7 +52,7 @@ export const updateItem = async (req: Request, res: Response) => {
   try {
     const itemId = req.params.id;
     const data = req.body;
-    const result: any = await itemService.updateItem(itemId,data);
+    const result: any = await itemService.updateItem(itemId, data);
 
     if (result?.error) {
       res.status(400).json({ status: "failed", message: result.error.message });

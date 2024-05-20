@@ -28,36 +28,36 @@ export class ItemService {
     }
   }
 
-  getItem = async(itemId:any)=>{
-    try{
+  getItem = async (itemId: any) => {
+    try {
       const item = await getItem(itemId);
-      if(!item){
+      if (!item) {
         return {
-          error:{
-            message:"item dont exist in db"
+          error: {
+            message: "item dont exist in db"
           }
         }
       }
       return item;
-    }catch(err){
+    } catch (err) {
       throw err;
     }
   }
 
-  updateItem = async(itemId:any,data:any)=>{
-    try{
+  updateItem = async (itemId: any, data: any) => {
+    try {
       const item = await updateItem(itemId, data);
       return item;
-    }catch(err){
+    } catch (err) {
       throw err;
     }
   }
 
-  deleteItem = async(itemId:any)=>{
-    try{
+  deleteItem = async (itemId: any) => {
+    try {
       const item = await deleteItem(itemId);
       return item;
-    }catch(err){
+    } catch (err) {
       throw err;
     }
   }

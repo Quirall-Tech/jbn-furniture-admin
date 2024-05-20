@@ -18,7 +18,7 @@ export const router = Router();
 // ------------ Project api -------------
 router.route("/add").post(addProject);
 router.route("/list").post(getList);
-router.route("/drawing-upload/:id").post(upload.single('file'),drawingFileUpload);
+router.route("/drawing-upload/:id").post(upload.single('file'), drawingFileUpload);
 router.route("/material-upload/:id").post(materialUpload);
 router.route("/confirmation/:id").post(orderConfirmation);
 router.route("/arrival/:id").post(arrivalEstimate);

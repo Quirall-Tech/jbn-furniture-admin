@@ -24,8 +24,8 @@ const clientSchema = new Schema(
         type: String,
         required: [true, "Location or Landmark is Required"],
       },
-      link:{
-        type:String,
+      link: {
+        type: String,
       }
     },
   },

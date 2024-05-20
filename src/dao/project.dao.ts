@@ -13,14 +13,14 @@ export const addProject = async (data: any) => {
 };
 export const getProject = async (id: any) => {
   try {
-    const project = await Project.findOne({_id:id}).populate(['client','material_details','production_details']).populate({
-        path:'material_details',
-        populate:{
-            path:'item',
-            populate:{
-                path:'item_id'
-            }
+    const project = await Project.findOne({ _id: id }).populate(['client', 'material_details', 'production_details']).populate({
+      path: 'material_details',
+      populate: {
+        path: 'item',
+        populate: {
+          path: 'item_id'
         }
+      }
     });;
     return project;
   } catch (err) {
@@ -31,7 +31,7 @@ export const getProject = async (id: any) => {
 export const addMaterialIdToProject = async (id: any, materialId: object) => {
   try {
     const project = await Project.findOneAndUpdate(
-      {_id:id},
+      { _id: id },
       { material_details: materialId },
       { returnDocument: "after" }
     );
@@ -44,7 +44,7 @@ export const addMaterialIdToProject = async (id: any, materialId: object) => {
 export const addProductionIdToProject = async (id: any, productionId: object) => {
   try {
     const project = await Project.findOneAndUpdate(
-      {_id:id},
+      { _id: id },
       { production_details: productionId },
       { returnDocument: "after" }
     );
@@ -54,102 +54,102 @@ export const addProductionIdToProject = async (id: any, productionId: object) =>
     throw err;
   }
 };
-export const addDrawingFile = async (id: any, file: [{url:String;notes:String;date:Date}]) => {
+export const addDrawingFile = async (id: any, file: [{ url: String; notes: String; date: Date }]) => {
   try {
-    console.log(id,file,'..............');
+    console.log(id, file, '..............');
     return await Project.findOneAndUpdate(
-        { _id: id }, // Filter to find the project by ID
-        {
-          $push: {
-            'attachments.drawingFile': {
-              $each: [...file], // Use $each to push multiple attachments
-            }
-          },
+      { _id: id }, // Filter to find the project by ID
+      {
+        $push: {
+          'attachments.drawingFile': {
+            $each: [...file], // Use $each to push multiple attachments
+          }
         },
-        {
-          new: true // Return the modified document
-        }
-      )
+      },
+      {
+        new: true // Return the modified document
+      }
+    )
   } catch (err) {
-    console.log("Error occured while adding drawing file to Project",err);
+    console.log("Error occured while adding drawing file to Project", err);
     throw err;
   }
 };
-export const addMaterialEstimateFile = async (id: any, file: [{url:String;notes:String;date:Date}]) => {
+export const addMaterialEstimateFile = async (id: any, file: [{ url: String; notes: String; date: Date }]) => {
   try {
     return await Project.findOneAndUpdate(
-        { _id: id }, // Filter to find the project by ID
-        {
-          $push: {
-            'attachments.materialEstimateFile': {
-              $each: [...file], // Use $each to push multiple attachments
-            }
-          },
+      { _id: id }, // Filter to find the project by ID
+      {
+        $push: {
+          'attachments.materialEstimateFile': {
+            $each: [...file], // Use $each to push multiple attachments
+          }
         },
-        {
-          new: true // Return the modified document
-        }
-      )
+      },
+      {
+        new: true // Return the modified document
+      }
+    )
   } catch (err) {
     console.log("Error occured while adding material estimate file to Project");
     throw err;
   }
 };
-export const addInstallationFile = async (id: any, file: [{url:String;notes:String;date:Date}]) => {
+export const addInstallationFile = async (id: any, file: [{ url: String; notes: String; date: Date }]) => {
   try {
     return await Project.findOneAndUpdate(
-        { _id: id }, // Filter to find the project by ID
-        {
-          $push: {
-            'attachments.installationFile': {
-              $each: [...file], // Use $each to push multiple attachments
-            }
-          },
+      { _id: id }, // Filter to find the project by ID
+      {
+        $push: {
+          'attachments.installationFile': {
+            $each: [...file], // Use $each to push multiple attachments
+          }
         },
-        {
-          new: true // Return the modified document
-        }
-      )
+      },
+      {
+        new: true // Return the modified document
+      }
+    )
   } catch (err) {
     console.log("Error occured while adding installation file to Project");
     throw err;
   }
 };
-export const addClosingReportFile = async (id: any, file: [{url:String;notes:String;date:Date}]) => {
+export const addClosingReportFile = async (id: any, file: [{ url: String; notes: String; date: Date }]) => {
   try {
     return await Project.findOneAndUpdate(
-        { _id: id }, // Filter to find the project by ID
-        {
-          $push: {
-            'attachments.closingReportFile': {
-              $each: [...file], // Use $each to push multiple attachments
-            }
-          },
+      { _id: id }, // Filter to find the project by ID
+      {
+        $push: {
+          'attachments.closingReportFile': {
+            $each: [...file], // Use $each to push multiple attachments
+          }
         },
-        {
-          new: true // Return the modified document
-        }
-      )
+      },
+      {
+        new: true // Return the modified document
+      }
+    )
   } catch (err) {
     console.log("Error occured while adding closing report file to Project");
     throw err;
   }
 };
-export const addServiceReportFile = async (id: any, file: [{url:String;notes:String;date:Date}]) => {
+export const addServiceReportFile = async (id: any, file: [{ url: String; notes: String; date: Date }]) => {
   try {
     return await Project.findOneAndUpdate(
-        { _id: id }, // Filter to find the project by ID
-        {
-          $push: {
-            'attachments.serviceReportFile': {
-              $each: [...file], // Use $each to push multiple attachments
-            }
-          },
+      { _id: id }, // Filter to find the project by ID
+      {
+        $push: {
+          'attachments.serviceReportFile': {
+            $each: [...file], // Use $each to push multiple attachments
+          }
         },
-        {
-          new: true // Return the modified document
-        }
-      )
+      },
+      {
+        new: true // Return the modified document
+      }
+    )
   } catch (err) {
     console.log("Error occured while adding service report file to Project");
     throw err;
@@ -157,14 +157,14 @@ export const addServiceReportFile = async (id: any, file: [{url:String;notes:Str
 };
 export const listProject = async () => {
   try {
-    const itemList = await Project.find().populate(['client','material_details','production_details']).populate({
-        path:'material_details',
-        populate:{
-            path:'item',
-            populate:{
-                path:'item_id'
-            }
+    const itemList = await Project.find().populate(['client', 'material_details', 'production_details']).populate({
+      path: 'material_details',
+      populate: {
+        path: 'item',
+        populate: {
+          path: 'item_id'
         }
+      }
     });
     return itemList;
   } catch (err) {
@@ -172,11 +172,11 @@ export const listProject = async () => {
     throw err;
   }
 };
-export const updateStatus = async (id:any,statusCode:any)=>{
-    try {
-        return await Project.findByIdAndUpdate(id,{orderStatus:statusCode});
-      } catch (err) {
-        console.log("Error occured while find items");
-        throw err;
-      }
+export const updateStatus = async (id: any, statusCode: any) => {
+  try {
+    return await Project.findByIdAndUpdate(id, { orderStatus: statusCode });
+  } catch (err) {
+    console.log("Error occured while find items");
+    throw err;
+  }
 }

@@ -185,8 +185,8 @@ export class ProjectService {
   deliveryUpdation = async (data: any) => {
     try {
       const projectId = data.id;
-      const { driverNumber ,vehicleNumber } = data
-      const newProject = await Project.findOneAndUpdate({ _id: projectId }, { delivery:{ driverNumber ,vehicleNumber } }, { new: true });
+      const { driverNumber, vehicleNumber } = data
+      const newProject = await Project.findOneAndUpdate({ _id: projectId }, { delivery: { driverNumber, vehicleNumber } }, { new: true });
       if (data.isApproved) {
         await this.upgradeOrderStatus(projectId, newProject?.orderStatus);
       }

@@ -4,12 +4,12 @@ const itemSchema = new Schema(
   {
     name: {
       type: String,
-      unique:true,
+      unique: true,
       required: [true, "Name of item is required"],
     },
     code: {
       type: String,
-      unique:true,
+      unique: true,
       // required: [true, "Code of item is required"],
     },
     price: {
@@ -30,7 +30,7 @@ itemSchema.pre("save", async function (next) {
     // Find the highest order number from existing records
     const Model = mongoose.model("Item");
     const highestOrder = await Model.findOne(
-      {},{},
+      {}, {},
       { sort: { code: -1 } }
     );
 

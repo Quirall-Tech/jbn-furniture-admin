@@ -6,7 +6,19 @@ const userSchema = new Schema(
     username: {
       type: String,
       required: [true, "Username is required"],
+    },
+    mobile: {
+      type: String,
+      required: [true, "Username is required"],
       unique: true,
+    },
+    mail: {
+      type: String,
+    },
+    isBlocked: {
+      type: Boolean,
+      default: false,
+      required: true,
     },
     password: {
       type: String,

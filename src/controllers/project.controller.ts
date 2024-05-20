@@ -40,17 +40,17 @@ export const drawingFileUpload = async (req: Request, res: Response) => {
     if (req?.file) {
       const data: any = req?.file;
       const url = data.location;
-      console.log(req.body,req.params,req.file, "req body");
+      console.log(req.body, req.params, req.file, "req body");
       await projectService.drawingUpdate({
         id: req.params.id,
         file: [
           { url, date: Date.now() },
           //if multiple file need to add to this array
         ],
-        isApproved:false,
+        isApproved: false,
       });
       res.status(200).json({ status: "success", data: { url } });
-    }else{
+    } else {
       res.status(400).json({ status: "failed", messages: "Bad request" });
     }
   } catch (err) {

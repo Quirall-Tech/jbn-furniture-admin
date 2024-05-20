@@ -32,9 +32,9 @@ const projectSchema = new Schema(
             enum: ["HIGH", "MEDIUM", "CRITICAL", "LOW"],
             default: "HIGH",
         },
-        isArrived:{
-            type:Boolean,
-            default:false,
+        isArrived: {
+            type: Boolean,
+            default: false,
         },
         transactionDetails: [{
             transactionId: String,
@@ -51,12 +51,12 @@ const projectSchema = new Schema(
             type: mongoose.Types.ObjectId,
             ref: "Material",
         },
-        delivery:{
-            driverNumber:{
-                type:Number
+        delivery: {
+            driverNumber: {
+                type: Number
             },
-            vehicleNumber:{
-                type:String
+            vehicleNumber: {
+                type: String
             }
         },
         attachments: {

@@ -9,8 +9,8 @@ const productionSchema = new Schema(
     // lastApprovedBy:{
     //   type: String,
     // },
-    isCompleted:{
-      type:Boolean
+    isCompleted: {
+      type: Boolean
     },
     productionStatus: {
       "1": {

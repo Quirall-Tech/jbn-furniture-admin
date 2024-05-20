@@ -4,6 +4,7 @@ import { connectDB } from "./src/db/connection";
 import { router as authRouter } from "./src/routes/auth.route";
 import { router as projectRouter } from "./src/routes/project.route";
 import { router as itemRouter } from "./src/routes/item.route";
+import { router as userRouter } from "./src/routes/user.route";
 import { envVariables } from "./src/config/environments";
 
 import "./src/config/globals";
@@ -18,8 +19,8 @@ envVariables.parse(process.env);
 const app = express();
 
 const corsOptions = {
-  origin:["http://localhost:4200","*"],
-  credentials:true
+  origin: ["http://localhost:4200", "*"],
+  credentials: true
 };
 const port = process.env.PORT || 3000;
 
@@ -32,6 +33,7 @@ connectDB();
 app.use("/auth", authRouter);
 app.use("/project", projectRouter);
 app.use("/item", itemRouter);
+app.use("/user", userRouter);
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`);

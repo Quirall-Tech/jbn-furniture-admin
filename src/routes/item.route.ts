@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {addItem, deletedItem, getItem, itemList, updateItem } from "../controllers/item.controller";
+import { addItem, deletedItem, getItem, itemList, updateItem } from "../controllers/item.controller";
 import { authMiddleWare } from "../middlewares/auth.middleware";
 
 export const router = Router();

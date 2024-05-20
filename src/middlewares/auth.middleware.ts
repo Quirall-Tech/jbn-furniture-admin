@@ -5,14 +5,14 @@ import { stdRes } from "../utils/global.utils";
 type User = {
   username: string;
   password: string;
-  role: "user" | "admin";
+  role: "MD" | "GM" | "HR" | "OM" | "PM" | "SV" | "WR" | "CU" | "US";
 };
 
 const unAuthorize = (res: Response) => {
   res.status(401).send(stdRes(false, "Unauthorized request"));
 };
 
-export const authMiddleWare = (roles: ("user" | "admin")[]) => {
+export const authMiddleWare = (roles: ("MD" | "GM" | "HR" | "OM" | "PM" | "SV" | "WR" | "CU" | "US")[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
       unAuthorize(res);
