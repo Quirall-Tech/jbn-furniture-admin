@@ -38,17 +38,18 @@ export const getProject = async (req: Request, res: Response) => {
 export const drawingFileUpload = async (req: Request, res: Response) => {
   try {
     if (req?.files) {
-      const data: any = req?.files;
-      const files = data.map((file:any)=>{
-        return {url:file.location,date:Date.now()};
+      const projectId = req.params.id;
+      const data: any = req.body;
+      const fileData: any = req?.files;
+      const files = fileData.map((file: any) => {
+        return { url: file.location, date: Date.now() };
       })
-      console.log(req.body,req.files,req.file,"reqs");
-      
+
       await projectService.drawingUpdate({
-        id: req.params.id,
+        id: projectId,
         //if multiple file need to add to this array
         file: [...files],
-        isApproved: false,
+        isApproved: data.isApproved,
       });
       res.status(200).json({ status: "success", data: { files } });
     } else {
@@ -113,3 +114,98 @@ export const deliveryUpdate = async (req: Request, res: Response) => {
     res.status(500).json({ status: "Internal Server Error", message: err });
   }
 };
+export const installationUpdate = async (req: Request, res: Response) => {
+  try {
+    if (req?.files) {
+      const projectId = req.params.id;
+      const data: any = req.body;
+      const fileData: any = req?.files;
+      const files = fileData.map((file: any) => {
+        return { url: file.location, date: Date.now() };
+      })
+
+      await projectService.installationUpdate({
+        id: projectId,
+        //if multiple file need to add to this array
+        file: [...files],
+        isApproved: data.isApproved,
+      });
+      res.status(200).json({ status: "success", data: { files } });
+    } else {
+      res.status(400).json({ status: "failed", messages: "Bad request" });
+    }
+  } catch (err) {
+    res.status(500).json({ status: "Internal Server Error", message: err });
+  }
+};
+export const awaitingService = async (req: Request, res: Response) => {
+  try {
+    const projectId = req.params.id;
+    const data = req.body;
+    data.id=projectId;
+    const project = await projectService.awaitingServiceUpdate(data);
+    res.status(200).json({ status: "success", data: project });
+  } catch (err) {
+    res.status(500).json({ status: "Internal Server Error", message: err });
+  }
+};
+export const serviceUpdate = async (req: Request, res: Response) => {
+  try {
+    if (req?.files) {
+      const projectId = req.params.id;
+      const data: any = req.body;
+      const fileData: any = req?.files;
+      const files = fileData.map((file: any) => {
+        return { url: file.location, date: Date.now() };
+      })
+
+      await projectService.serviceUpdate({
+        id: projectId,
+        //if multiple file need to add to this array
+        file: [...files],
+        isApproved: data.isApproved,
+      });
+      res.status(200).json({ status: "success", data: { files } });
+    } else {
+      res.status(400).json({ status: "failed", messages: "Bad request" });
+    }
+  } catch (err) {
+    res.status(500).json({ status: "Internal Server Error", message: err });
+  }
+};
+export const closingUpdate = async (req: Request, res: Response) => {
+  try {
+    if (req?.files) {
+      const projectId = req.params.id;
+      const data: any = req.body;
+      const fileData: any = req?.files;
+      const files = fileData.map((file: any) => {
+        return { url: file.location, date: Date.now() };
+      })
+
+      await projectService.closingUpdate({
+        id: projectId,
+        //if multiple file need to add to this array
+        file: [...files],
+        isApproved: data.isApproved,
+      });
+      res.status(200).json({ status: "success", data: { files } });
+    } else {
+      res.status(400).json({ status: "failed", messages: "Bad request" });
+    }
+  } catch (err) {
+    res.status(500).json({ status: "Internal Server Error", message: err });
+  }
+};
+export const cancellation = async (req: Request, res: Response) => {
+  try {
+    const projectId = req.params.id;
+    // const data = req.body;
+    // data.id = projectId;
+    const project = await projectService.cancelOrder(projectId);
+    res.status(200).json({ status: "success", data: project });
+  } catch (err) {
+    res.status(500).json({ status: "Internal Server Error", message: err });
+  }
+};
+

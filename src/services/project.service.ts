@@ -1,18 +1,23 @@
 import { Client } from "../db/models/Client";
 import { Project } from "../db/models/Project";
 import {
+  addClosingReportFile,
   addDrawingFile,
+  addInstallationFile,
   addMaterialIdToProject,
   addProductionIdToProject,
   addProject,
+  addServiceReportFile,
   getProject,
   listProject,
+  updateProject,
   updateStatus,
 } from "../dao/project.dao";
 import { Material } from "../db/models/Material";
 import mongoose, { Error } from "mongoose";
 import { Production } from "../db/models/Production";
 import { Item } from "../db/models/Item";
+import { OrderStatus } from "../common/constants";
 
 export class ProjectService {
   //create new project
@@ -21,15 +26,24 @@ export class ProjectService {
       const { client, notes, description } = data;
       const checkClient = await Client.findOne({ mob: client.mob });
       if (checkClient) {
-        return await addProject({
+        const data: any = {
           client: checkClient._id,
           notes,
           description,
-        });
+        };
+        if (data.isApproved) {
+          data.orderStatus = OrderStatus.DRAWING;
+        }
+        await addProject(data);
       } else {
         const newClient = await Client.create(client);
-        return await addProject({ client: newClient._id, notes, description });
+        const data: any = { client: newClient._id, notes, description };
+        if (data.isApproved) {
+          data.orderStatus = OrderStatus.DRAWING;
+        }
+        await addProject(data);
       }
+
     } catch (err) {
       console.log("Error occured while creating Project");
       throw err;
@@ -53,11 +67,17 @@ export class ProjectService {
       throw err;
     }
   };
-  //order entering complete (orderStatus=1)
-  orderEnteringComplete = async (data: any) => {
+  //order entering complete (orderStatus=1) Note: will move to drawing status if approved
+  orderEnteringUpdate = async (data: any) => {
     try {
+      const projectId = data.id;
+      if (data.isApproved) {
+        data.orderStatus = OrderStatus.DRAWING;
+      }
+      const project = await updateProject(projectId, data);
+      return project;
     } catch (err) {
-      console.log("Error occured while entering order");
+      console.log("Error occured while updating order");
       throw err;
     }
   };
@@ -69,7 +89,7 @@ export class ProjectService {
       const project = await addDrawingFile(projectId, file);
       console.log(project, '-----------')
       if (data.isApproved) {
-        await this.upgradeOrderStatus(projectId, project?.orderStatus);
+        await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.MATERIAL_ESTIMATE }, { new: true }); //----------------------------
       }
       return { message: "data saved successfully" };
     } catch (err) {
@@ -108,7 +128,7 @@ export class ProjectService {
       }
       //approve to next orderStatus
       if (data?.isApproved) {
-        await this.upgradeOrderStatus(projectId, project?.orderStatus);
+        await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.WAITING_CONFIRMATION }, { new: true }); //----------------------------
       }
       return { message: "data saved successfully" };
     } catch (err) {
@@ -137,7 +157,7 @@ export class ProjectService {
         { new: true }
       );
       if (data.isApproved) {
-        await this.upgradeOrderStatus(projectId, project?.orderStatus);
+        await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.MATERIAL_ARRIVAL }, { new: true }); //----------------------------
       }
       return { message: "data saved successfully" };
     } catch (err) {
@@ -145,6 +165,21 @@ export class ProjectService {
       throw err;
     }
   };
+  //arrivalEstimate
+  arrivalEstimate = async (data: any) => {
+    try {
+      const projectId = data.id;
+      const { isArrived, priority, estDateOfArrival } = data
+      const newProject = await Project.findOneAndUpdate({ _id: projectId }, { isArrived, priority, estDateOfArrival }, { new: true });
+      if (data.isApproved) {
+        await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.PRODUCTION }, { new: true }); //----------------------------
+      }
+      return { message: "data saved successfully" };
+    } catch (err) {
+      console.log("Error occured while estimate arrival order");
+      throw err;
+    }
+  }
   //material arrival estimate complete (orderStatus=5)
   productionUpdation = async (data: any) => {
     try {
@@ -158,29 +193,14 @@ export class ProjectService {
         await addProductionIdToProject(projectId, newProductionDetails._id);
       }
       if (data.isApproved) {
-        await this.upgradeOrderStatus(projectId, project?.orderStatus);
+        await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.DELIVERY }, { new: true }); //----------------------------
       }
       return { message: "data saved successfully" };
     } catch (err) {
-      console.log("Error occured while entering order");
+      console.log("Error occured while production updates");
       throw err;
     }
   };
-  //arrivalEstimate
-  arrivalEstimate = async (data: any) => {
-    try {
-      const projectId = data.id;
-      const { isArrived, priority, estDateOfArrival } = data
-      const newProject = await Project.findOneAndUpdate({ _id: projectId }, { isArrived, priority, estDateOfArrival }, { new: true });
-      if (data.isApproved) {
-        await this.upgradeOrderStatus(projectId, newProject?.orderStatus);
-      }
-      return { message: "data saved successfully" };
-    } catch (err) {
-      console.log("Error occured while entering order");
-      throw err;
-    }
-  }
   //delivery
   deliveryUpdation = async (data: any) => {
     try {
@@ -188,26 +208,88 @@ export class ProjectService {
       const { driverNumber, vehicleNumber } = data
       const newProject = await Project.findOneAndUpdate({ _id: projectId }, { delivery: { driverNumber, vehicleNumber } }, { new: true });
       if (data.isApproved) {
-        await this.upgradeOrderStatus(projectId, newProject?.orderStatus);
+        await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.INSTALLATION }, { new: true }); //----------------------------
       }
+      return { message: "data saved successfully" };
+    } catch (err) {
+      console.log("Error occured while delivery updates");
+      throw err;
+    }
+  }
+  //installation
+  installationUpdate = async (data: any) => {
+    try {
+      const projectId = data.id;
+      const file = data.file;
+      const project = await addInstallationFile(projectId, file);
+      if (data.isApproved) {
+        await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.AWAITING_SERVICE, installationDate: Date.now() }, { new: true }); //----------------------------
+      }
+      return { message: "data saved successfully" };
+    } catch (err) {
+      console.log("Error occured while installation updates");
+      throw err;
+    }
+  };
+
+  //awaiting service
+  awaitingServiceUpdate = async (data: any) => {
+    try {
+      const projectId = data.id;
+      if(data?.isApproved){
+        data.orderStatus=OrderStatus.SERVICE
+      }
+
+      await Project.findOneAndUpdate({ _id: projectId }, data, { new: true });
+      return { message: "data saved successfully" };
+    } catch (err) {
+      console.log("Error occured awaiting service completion");
+      throw err;
+    }
+  }
+
+  //service
+  serviceUpdate = async (data: any) => {
+    try {
+      const projectId = data.id;
+      const file = data.file;
+      const project = await addServiceReportFile(projectId, file);
+
+      if (data.isApproved) {
+        await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.TO_CLOSE }, { new: true }); //----------------------------
+      }
+      return { message: "data saved successfully" };
+    } catch (err) {
+      console.log("Error occured while service file upload");
+      throw err;
+    }
+  };
+  //close
+  closingUpdate = async (data: any) => {
+    try {
+      const projectId = data.id;
+      const file = data.file;
+      const project = await addClosingReportFile(projectId, file);
+
+      if (data.isApproved) {
+        await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.CLOSED }, { new: true }); //----------------------------
+      }
+      return { message: "data saved successfully" };
+    } catch (err) {
+      console.log("Error occured while installation file upload");
+      throw err;
+    }
+  }
+  //cancel
+  cancelOrder = async (projectId: any) => {
+    try {
+      const project =await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.CANCELLED }, { new: true });
+      console.log(project);
+      
       return { message: "data saved successfully" };
     } catch (err) {
       console.log("Error occured while entering order");
       throw err;
     }
   }
-  //installation
-  //awaiting service
-  //service
-  //close
-  //cancel
-
-  upgradeOrderStatus = async (projectId: any, currentStatus: any) => {
-    try {
-      const newStatus = currentStatus + 1;
-      return await updateStatus(projectId, newStatus);
-    } catch (err) {
-      throw (err);
-    }
-  };
 }

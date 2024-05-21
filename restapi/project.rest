@@ -154,8 +154,44 @@ Content-Type: multipart/form-data
 
 {
   "isApproved":true,
-  "photos":"",
-  "driverNumber": 9876543210,
-  "vehicleNumber":"KL11JJ0987"
+  "installation":Files,
+  "notes":"description"
+}
+###
+POST http://localhost:3000/project/awaiting-service/66473ad8b351aeac5e55f457 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJmM2ZmOTNhNDVjNmQ1NjIyNTg2ZjkiLCJ1c2VybmFtZSI6Im1pc2hhbCIsInBhc3N3b3JkIjoiJDJiJDEwJEhkeDlZb1ZVaVJ4TUVQVm1meGRoRC5Ea2JGSWRpSXlxNFFvbklEbUhGRTRKM0tKRnk2Zk1pIiwicm9sZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJfX3YiOjAsImlhdCI6MTcxNDM3OTg2MH0.VPOthOyUbb_-E1OvwaMtrCyQk7ItvOetsG1nq0sCvoo
+Content-Type: application/json
+
+{
+  "isApproved":true
+}
+###
+POST http://localhost:3000/project/service/66473ad8b351aeac5e55f457 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJmM2ZmOTNhNDVjNmQ1NjIyNTg2ZjkiLCJ1c2VybmFtZSI6Im1pc2hhbCIsInBhc3N3b3JkIjoiJDJiJDEwJEhkeDlZb1ZVaVJ4TUVQVm1meGRoRC5Ea2JGSWRpSXlxNFFvbklEbUhGRTRKM0tKRnk2Zk1pIiwicm9sZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJfX3YiOjAsImlhdCI6MTcxNDM3OTg2MH0.VPOthOyUbb_-E1OvwaMtrCyQk7ItvOetsG1nq0sCvoo
+Content-Type: multipart/form-data
+
+{
+  "isApproved":true,
+  "service":Files,
+  "notes":"description"
+}
+###
+POST http://localhost:3000/project/close/66473ad8b351aeac5e55f457 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJmM2ZmOTNhNDVjNmQ1NjIyNTg2ZjkiLCJ1c2VybmFtZSI6Im1pc2hhbCIsInBhc3N3b3JkIjoiJDJiJDEwJEhkeDlZb1ZVaVJ4TUVQVm1meGRoRC5Ea2JGSWRpSXlxNFFvbklEbUhGRTRKM0tKRnk2Zk1pIiwicm9sZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJfX3YiOjAsImlhdCI6MTcxNDM3OTg2MH0.VPOthOyUbb_-E1OvwaMtrCyQk7ItvOetsG1nq0sCvoo
+Content-Type: multipart/form-data
+
+{
+  "isApproved":true,
+  "close":Files,
+  "notes":"description"
+}
+###
+POST http://localhost:3000/project/cancel/66473ad8b351aeac5e55f457 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJmM2ZmOTNhNDVjNmQ1NjIyNTg2ZjkiLCJ1c2VybmFtZSI6Im1pc2hhbCIsInBhc3N3b3JkIjoiJDJiJDEwJEhkeDlZb1ZVaVJ4TUVQVm1meGRoRC5Ea2JGSWRpSXlxNFFvbklEbUhGRTRKM0tKRnk2Zk1pIiwicm9sZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJfX3YiOjAsImlhdCI6MTcxNDM3OTg2MH0.VPOthOyUbb_-E1OvwaMtrCyQk7ItvOetsG1nq0sCvoo
+Content-Type: application/json
+
+{
+  "isApproved":true,
+  "notes":"reason for cancellation"
 }
 ###

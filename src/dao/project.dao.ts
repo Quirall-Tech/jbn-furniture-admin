@@ -11,6 +11,16 @@ export const addProject = async (data: any) => {
     throw err;
   }
 };
+export const updateProject = async (id: any, data: any) => {
+  try {
+    const project = await Project.findOneAndUpdate({ _id: id }, { ...data }, { new: true });
+    return project
+
+  } catch (err) {
+    console.log("Error occured while updating project");
+    throw err
+  }
+}
 export const getProject = async (id: any) => {
   try {
     const project = await Project.findOne({ _id: id }).populate(['client', 'material_details', 'production_details']).populate({
@@ -56,7 +66,6 @@ export const addProductionIdToProject = async (id: any, productionId: object) =>
 };
 export const addDrawingFile = async (id: any, file: [{ url: String; notes: String; date: Date }]) => {
   try {
-    console.log(id, file, '..............');
     return await Project.findOneAndUpdate(
       { _id: id }, // Filter to find the project by ID
       {

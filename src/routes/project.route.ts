@@ -9,6 +9,11 @@ import {
   productionUpdates,
   arrivalEstimate,
   deliveryUpdate,
+  installationUpdate,
+  awaitingService,
+  serviceUpdate,
+  closingUpdate,
+  cancellation,
 } from "../controllers/project.controller";
 import { authMiddleWare } from "../middlewares/auth.middleware";
 import { upload } from "../middlewares/multer.middleware";
@@ -24,23 +29,14 @@ router.route("/confirmation/:id").post(orderConfirmation);
 router.route("/arrival/:id").post(arrivalEstimate);
 router.route("/production/:id").post(productionUpdates);
 router.route("/delivery/:id").post(deliveryUpdate);
-router.route("/installation/:id").post(productionUpdates);
-//to be implimented
-router.route("/awaiting-service/:id").post(productionUpdates);
-router.route("/service/:id").post(productionUpdates);
-router.route("/close/:id").post(productionUpdates);
-router.route("/cancel/:id").post(productionUpdates);
-//arrivalEstimate
-//delivery
-//installation
-//awaiting service
-//service
-//close
-//cancel
+router.route("/installation/:id").post(upload.array('installation'),installationUpdate);
+router.route("/awaiting-service/:id").post(awaitingService);
+router.route("/service/:id").post(upload.array('service'),serviceUpdate);
+router.route("/close/:id").post(upload.array('closing'),closingUpdate);
+router.route("/cancel/:id").post(cancellation);
+
 
 //get project
 router.route("/:id").post(getProject);
 
 
-// ------------- Material api -------------
-router.route("/material/add");

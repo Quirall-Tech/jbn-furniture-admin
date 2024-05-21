@@ -59,6 +59,9 @@ const projectSchema = new Schema(
                 type: String
             }
         },
+        installationDate:{
+            type:Date,
+        },
         attachments: {
             drawingFile: [
                 {
