@@ -87,7 +87,6 @@ export class ProjectService {
       const projectId = data.id;
       const file = data.file;
       const project = await addDrawingFile(projectId, file);
-      console.log(project, '-----------')
       if (data.isApproved) {
         await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.MATERIAL_ESTIMATE }, { new: true }); //----------------------------
       }
@@ -284,7 +283,6 @@ export class ProjectService {
   cancelOrder = async (projectId: any) => {
     try {
       const project =await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.CANCELLED }, { new: true });
-      console.log(project);
       
       return { message: "data saved successfully" };
     } catch (err) {
