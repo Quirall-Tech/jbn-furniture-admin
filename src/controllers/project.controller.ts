@@ -37,19 +37,20 @@ export const getProject = async (req: Request, res: Response) => {
 
 export const drawingFileUpload = async (req: Request, res: Response) => {
   try {
-    if (req?.file) {
-      const data: any = req?.file;
-      const url = data.location;
-      console.log(req.body, req.params, req.file, "req body");
+    if (req?.files) {
+      const data: any = req?.files;
+      const files = data.map((file:any)=>{
+        return {url:file.location,date:Date.now()};
+      })
+      console.log(req.body,req.files,req.file,"reqs");
+      
       await projectService.drawingUpdate({
         id: req.params.id,
-        file: [
-          { url, date: Date.now() },
-          //if multiple file need to add to this array
-        ],
+        //if multiple file need to add to this array
+        file: [...files],
         isApproved: false,
       });
-      res.status(200).json({ status: "success", data: { url } });
+      res.status(200).json({ status: "success", data: { files } });
     } else {
       res.status(400).json({ status: "failed", messages: "Bad request" });
     }

@@ -9,7 +9,7 @@ const userSchema = new Schema(
     },
     mobile: {
       type: String,
-      required: [true, "Username is required"],
+      required: [true, "Mobile no. is required"],
       unique: true,
     },
     mail: {

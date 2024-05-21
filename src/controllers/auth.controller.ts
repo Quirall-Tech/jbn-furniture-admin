@@ -10,7 +10,7 @@ export interface IRegisterBody {
 }
 
 export const handleRegister = async (req: Request, res: Response) => {
-  const body = req.body as IRegisterBody;
+  const body = req.body;
 
   if (!body) return res.status(500).json(stdRes(false, `Can't find body`));
   if (!body.username)
@@ -18,7 +18,7 @@ export const handleRegister = async (req: Request, res: Response) => {
   if (!body.password)
     return res.status(400).json(stdRes(false, `Password is required`));
 
-  const user = new User({ username: body.username, password: body.password });
+  const user = new User({ ...body });
 
   const err = user.validateSync();
 
@@ -45,20 +45,20 @@ export const handleRegister = async (req: Request, res: Response) => {
 };
 
 export const handleLogin = async (req: Request, res: Response) => {
-  const body = req.body as IRegisterBody;
+  const body = req.body;
 
   if (!body) return res.status(500).json(stdRes(false, `Can't find body`));
-  if (!body.username)
-    return res.status(400).json(stdRes(false, `Username is required`));
+  if (!body.mail)
+    return res.status(400).json(stdRes(false, `Mail is required`));
   if (!body.password)
     return res.status(400).json(stdRes(false, `Password is required`));
 
-  const user = await User.findOne({ username: body.username });
+  const user = await User.findOne({ mail: body.mail });
 
   if (!user) {
     return res
       .status(404)
-      .json(stdRes(false, "Username or password is incorrect"));
+      .json(stdRes(false, "Mail or password is incorrect"));
   }
 
   const passMatch = await compare(body.password, user.password);
@@ -66,7 +66,7 @@ export const handleLogin = async (req: Request, res: Response) => {
   if (!passMatch) {
     return res
       .status(401)
-      .json(stdRes(false, "Username or password is incorrect"));
+      .json(stdRes(false, "Mail or password is incorrect"));
   }
 
   const key = process.env.SIGN_KEY;
