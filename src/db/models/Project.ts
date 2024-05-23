@@ -5,7 +5,7 @@ const projectSchema = new Schema(
     {
         orderStatus: {
             type: Number,
-            default: 1,
+            default: 2,
             required: [true, "orderStatus is required"]
         },
         orderNumber: {
@@ -25,6 +25,9 @@ const projectSchema = new Schema(
             type: Number,
         },
         estDateOfArrival: {
+            type: Date,
+        },
+        materialArrivedDate: {
             type: Date,
         },
         priority: {
@@ -57,6 +60,9 @@ const projectSchema = new Schema(
             },
             vehicleNumber: {
                 type: String
+            },
+            date:{
+                type:Date
             }
         },
         installationDate:{

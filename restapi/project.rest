@@ -99,6 +99,7 @@ Content-Type: application/json
 {
     "isApproved":false,
   "isCompleted": false,
+  "inCharge":"Sabi",
   "productionStatus": {
     "1": {
       "percentCompleted": 10,

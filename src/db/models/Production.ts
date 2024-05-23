@@ -1,14 +1,14 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Mongoose, Schema } from "mongoose";
 
 const productionSchema = new Schema(
   {
-    // currentStatus: {
-    //   type: Number,
-    //   default: 1,
-    // },
-    // lastApprovedBy:{
-    //   type: String,
-    // },
+    status: {
+      type: Number,
+      default: 1,
+    },
+    inCharge:{
+      type: String,
+    },
     isCompleted: {
       type: Boolean
     },

@@ -54,7 +54,7 @@ export class ProjectService {
     try {
       return await listProject();
     } catch (err) {
-      console.log("Error occured while getting project list");
+      console.log("Error occured while getting project list",err);
       throw err;
     }
   };
@@ -63,7 +63,7 @@ export class ProjectService {
     try {
       return await getProject(id);
     } catch (err) {
-      console.log("Error occured while getting project list");
+      console.log("Error occured while getting project list",err);
       throw err;
     }
   };
@@ -185,12 +185,28 @@ export class ProjectService {
       const projectId = data.id;
       const project = await getProject(projectId);
       if (project?.production_details) {
+
         const productionDetails: any = project.production_details;
+
+        //setting status from list of production data
+        let productionStatus;
+        Object.values(data.productionStatus).forEach((valueObj:any,index:number)=>{
+          if(valueObj.percentCompleted>0){
+            productionStatus=index+1;
+          }
+        })
+        data.status = productionStatus;
+
+        //updating with production details
         await Production.findOneAndUpdate({ _id: productionDetails._id }, data)
       } else {
+
+        //new production collection create and linking with existing project
         const newProductionDetails = await Production.create(data);
         await addProductionIdToProject(projectId, newProductionDetails._id);
       }
+      
+      //if approved status updation to next step
       if (data.isApproved) {
         await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.DELIVERY }, { new: true }); //----------------------------
       }
@@ -205,7 +221,7 @@ export class ProjectService {
     try {
       const projectId = data.id;
       const { driverNumber, vehicleNumber } = data
-      const newProject = await Project.findOneAndUpdate({ _id: projectId }, { delivery: { driverNumber, vehicleNumber } }, { new: true });
+      const newProject = await Project.findOneAndUpdate({ _id: projectId }, { delivery: { driverNumber, vehicleNumber, date: Date.now() } }, { new: true });
       if (data.isApproved) {
         await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.INSTALLATION }, { new: true }); //----------------------------
       }
@@ -235,8 +251,8 @@ export class ProjectService {
   awaitingServiceUpdate = async (data: any) => {
     try {
       const projectId = data.id;
-      if(data?.isApproved){
-        data.orderStatus=OrderStatus.SERVICE
+      if (data?.isApproved) {
+        data.orderStatus = OrderStatus.SERVICE
       }
 
       await Project.findOneAndUpdate({ _id: projectId }, data, { new: true });
@@ -282,8 +298,8 @@ export class ProjectService {
   //cancel
   cancelOrder = async (projectId: any) => {
     try {
-      const project =await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.CANCELLED }, { new: true });
-      
+      const project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.CANCELLED }, { new: true });
+
       return { message: "data saved successfully" };
     } catch (err) {
       console.log("Error occured while entering order");
