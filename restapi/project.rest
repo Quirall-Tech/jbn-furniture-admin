@@ -15,8 +15,9 @@ Content-Type: application/json
             "link":"path/of/googlemaps"
         }
     },
-    "notes":"heey",
-    "description":"heey"
+    "projectTotal":13123,
+    "notes":"new",
+    "description":"new"
 }
 
 ###
@@ -30,7 +31,7 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:3000/project/66473abbb351aeac5e55f453 HTTP/1.1
+POST http://localhost:3000/project/665639ae156de0d0e188b72e HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJmM2ZmOTNhNDVjNmQ1NjIyNTg2ZjkiLCJ1c2VybmFtZSI6Im1pc2hhbCIsInBhc3N3b3JkIjoiJDJiJDEwJEhkeDlZb1ZVaVJ4TUVQVm1meGRoRC5Ea2JGSWRpSXlxNFFvbklEbUhGRTRKM0tKRnk2Zk1pIiwicm9sZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJfX3YiOjAsImlhdCI6MTcxNDM3OTg2MH0.VPOthOyUbb_-E1OvwaMtrCyQk7ItvOetsG1nq0sCvoo
 Content-Type: application/json
 
@@ -50,54 +51,45 @@ Content-Type: multipart/form-data
 }
 ###
 
-POST http://localhost:3000/project/material-upload/66473ad8b351aeac5e55f457 HTTP/1.1
+POST http://localhost:3000/project/material-upload/665639ae156de0d0e188b72e HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJmM2ZmOTNhNDVjNmQ1NjIyNTg2ZjkiLCJ1c2VybmFtZSI6Im1pc2hhbCIsInBhc3N3b3JkIjoiJDJiJDEwJEhkeDlZb1ZVaVJ4TUVQVm1meGRoRC5Ea2JGSWRpSXlxNFFvbklEbUhGRTRKM0tKRnk2Zk1pIiwicm9sZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJfX3YiOjAsImlhdCI6MTcxNDM3OTg2MH0.VPOthOyUbb_-E1OvwaMtrCyQk7ItvOetsG1nq0sCvoo
 Content-Type: application/json
 
 {
   "item": [
     {
-        "item_id":"6648ba487b301d8e8f5be47b",
       "price":12344,
       "unitCalculated":"sqft",
-      "name":"multiwood",
+      "name":"dsfasdfasdf",
       "quantity": 5,
       "subTotal": 222
-    },
-    {
-        "item_id":"6648ba487b301d8e8f5be47c",
-      "price":45644,
-      "unitCalculated":"cbcm",
-      "name":"plywood",
-      "quantity": 9,
-      "subTotal": 3453
     }
   ],
   "grossTotal": 1234,
   "isApproved": true,
   "estimatedDaysOfCompletion": 12,
-  "notes": ""
+  "notes": "sfasd"
 }
 ###
 
-POST http://localhost:3000/project/confirmation/66473ad8b351aeac5e55f457 HTTP/1.1
+POST http://localhost:3000/project/confirmation/665639ae156de0d0e188b72e HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJmM2ZmOTNhNDVjNmQ1NjIyNTg2ZjkiLCJ1c2VybmFtZSI6Im1pc2hhbCIsInBhc3N3b3JkIjoiJDJiJDEwJEhkeDlZb1ZVaVJ4TUVQVm1meGRoRC5Ea2JGSWRpSXlxNFFvbklEbUhGRTRKM0tKRnk2Zk1pIiwicm9sZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJfX3YiOjAsImlhdCI6MTcxNDM3OTg2MH0.VPOthOyUbb_-E1OvwaMtrCyQk7ItvOetsG1nq0sCvoo
 Content-Type: application/json
 
 {
   "transactionId": "asdfa234sdfs",
-  "amount": 12312,
-  "paymentType": "Cash",
-  "isApproved":false
+  "amount": 46546,
+  "paymentType": "Bank",
+  "isApproved":true
 }
 ###
 
-POST http://localhost:3000/project/production/66473ad8b351aeac5e55f457 HTTP/1.1
+POST http://localhost:3000/project/production/665639ae156de0d0e188b72e HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJmM2ZmOTNhNDVjNmQ1NjIyNTg2ZjkiLCJ1c2VybmFtZSI6Im1pc2hhbCIsInBhc3N3b3JkIjoiJDJiJDEwJEhkeDlZb1ZVaVJ4TUVQVm1meGRoRC5Ea2JGSWRpSXlxNFFvbklEbUhGRTRKM0tKRnk2Zk1pIiwicm9sZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJfX3YiOjAsImlhdCI6MTcxNDM3OTg2MH0.VPOthOyUbb_-E1OvwaMtrCyQk7ItvOetsG1nq0sCvoo
 Content-Type: application/json
 
 {
-  "isApproved":false,
+  "isApproved":true,
   "isCompleted": false,
   "inCharge":"Sabi",
   "productionStatus": {
@@ -128,30 +120,30 @@ Content-Type: application/json
   }
 }
 ###
-POST http://localhost:3000/project/arrival/66473ad8b351aeac5e55f457 HTTP/1.1
+POST http://localhost:3000/project/arrival/665639ae156de0d0e188b72e HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJmM2ZmOTNhNDVjNmQ1NjIyNTg2ZjkiLCJ1c2VybmFtZSI6Im1pc2hhbCIsInBhc3N3b3JkIjoiJDJiJDEwJEhkeDlZb1ZVaVJ4TUVQVm1meGRoRC5Ea2JGSWRpSXlxNFFvbklEbUhGRTRKM0tKRnk2Zk1pIiwicm9sZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJfX3YiOjAsImlhdCI6MTcxNDM3OTg2MH0.VPOthOyUbb_-E1OvwaMtrCyQk7ItvOetsG1nq0sCvoo
 Content-Type: application/json
 
 {
-  "isApproved":false,
-  "isArrived": false,
+  "isApproved":true,
+  "isArrived": true,
   "priority":"LOW",
   "estDateOfArrival": 1716140537329
 }
 ###
-POST http://localhost:3000/project/delivery/66473ad8b351aeac5e55f457 HTTP/1.1
+POST http://localhost:3000/project/delivery/665639ae156de0d0e188b72e HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJmM2ZmOTNhNDVjNmQ1NjIyNTg2ZjkiLCJ1c2VybmFtZSI6Im1pc2hhbCIsInBhc3N3b3JkIjoiJDJiJDEwJEhkeDlZb1ZVaVJ4TUVQVm1meGRoRC5Ea2JGSWRpSXlxNFFvbklEbUhGRTRKM0tKRnk2Zk1pIiwicm9sZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJfX3YiOjAsImlhdCI6MTcxNDM3OTg2MH0.VPOthOyUbb_-E1OvwaMtrCyQk7ItvOetsG1nq0sCvoo
 Content-Type: application/json
 
 {
-  "isApproved":false,
+  "isApproved":true,
   "driverNumber": 9876543210,
   "vehicleNumber":"KL11JJ0987",
   "isDelivered":true,
   "furnitureList":[{"area":"kitchen","text":"enthenkilum"}]
 }
 ###
-POST http://localhost:3000/project/installation/66473ad8b351aeac5e55f457 HTTP/1.1
+POST http://localhost:3000/project/installation/665639ae156de0d0e188b72e HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJmM2ZmOTNhNDVjNmQ1NjIyNTg2ZjkiLCJ1c2VybmFtZSI6Im1pc2hhbCIsInBhc3N3b3JkIjoiJDJiJDEwJEhkeDlZb1ZVaVJ4TUVQVm1meGRoRC5Ea2JGSWRpSXlxNFFvbklEbUhGRTRKM0tKRnk2Zk1pIiwicm9sZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJfX3YiOjAsImlhdCI6MTcxNDM3OTg2MH0.VPOthOyUbb_-E1OvwaMtrCyQk7ItvOetsG1nq0sCvoo
 Content-Type: application/json
 
@@ -254,4 +246,13 @@ Content-Type: multipart/form-data
   "file":"Files",
   "key":"close || service || installation || drawing || invoice",
   "notes":"notes"
+}
+###
+POST http://localhost:3000/project/deleteFile/665639ae156de0d0e188b72e HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJmM2ZmOTNhNDVjNmQ1NjIyNTg2ZjkiLCJ1c2VybmFtZSI6Im1pc2hhbCIsInBhc3N3b3JkIjoiJDJiJDEwJEhkeDlZb1ZVaVJ4TUVQVm1meGRoRC5Ea2JGSWRpSXlxNFFvbklEbUhGRTRKM0tKRnk2Zk1pIiwicm9sZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJfX3YiOjAsImlhdCI6MTcxNDM3OTg2MH0.VPOthOyUbb_-E1OvwaMtrCyQk7ItvOetsG1nq0sCvoo
+Content-Type: application/json
+
+{
+  "fileId":"66563b33c252e883e292f459",
+  "key":"drawing"
 }

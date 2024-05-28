@@ -90,7 +90,7 @@ export const addMaterialEstimateFile = async (id: any, file: [{ url: String; not
       { _id: id }, // Filter to find the project by ID
       {
         $push: {
-          'attachments.materialEstimateFile': {
+          'attachments.invoiceFile': {
             $each: [...file], // Use $each to push multiple attachments
           }
         },
@@ -176,6 +176,30 @@ export const listProject = async () => {
       }
     });
     return itemList;
+  } catch (err) {
+    console.log("Error occured while find items");
+    throw err;
+  }
+};
+export const deleteFile = async (projectId:any,fileId:any,key:any) => {
+  try {
+    if (key === "close") {
+      return await Project.findByIdAndUpdate(projectId,{ $pull: { "attachments.closingReportFile": { _id: fileId } } },{multi:false,new:true});
+    } else if (key === "service") {
+      return await Project.findByIdAndUpdate(projectId,{ $pull: { "attachments.serviceReportFile": { _id: fileId } } },{multi:false,new:true});
+    } else if (key === "installation") {
+      return await Project.findByIdAndUpdate(projectId,{ $pull: { "attachments.installationFile": { _id: fileId } } },{multi:false,new:true});
+    } else if (key === "drawing") {
+      return await Project.findByIdAndUpdate(projectId,{ $pull: { "attachments.drawingFile": { _id: fileId } } },{multi:false,new:true});
+    } else if (key === "invoice") {
+      return await Project.findByIdAndUpdate(projectId,{ $pull: { "attachments.invoiceFile": { _id: fileId } } },{multi:false,new:true});
+    } else {
+      return {
+        error: {
+          message: "No proper data found"
+        }
+      }
+    }
   } catch (err) {
     console.log("Error occured while find items");
     throw err;

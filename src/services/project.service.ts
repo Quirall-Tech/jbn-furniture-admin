@@ -4,10 +4,12 @@ import {
   addClosingReportFile,
   addDrawingFile,
   addInstallationFile,
+  addMaterialEstimateFile,
   addMaterialIdToProject,
   addProductionIdToProject,
   addProject,
   addServiceReportFile,
+  deleteFile,
   getProject,
   listProject,
   updateProject,
@@ -23,25 +25,32 @@ export class ProjectService {
   //create new project
   createProject = async (data: any) => {
     try {
-      const { client, notes, description } = data;
-      const checkClient = await Client.findOne({ mob: client.mob });
-      if (checkClient) {
-        const data: any = {
-          client: checkClient._id,
-          notes,
-          description,
-        };
-        if (data.isApproved) {
-          data.orderStatus = OrderStatus.DRAWING;
+      const { client, notes, description,projectTotal } = data;
+      //data contains mob, name and city of client
+      
+      if (client.mob && client.name && client.add.city) {
+        const checkClient = await Client.findOne({ mob: client.mob });
+        //check client in db
+        if (checkClient) {
+          const data: any = {
+            client: checkClient._id,
+            notes,
+            description,
+            projectTotal
+          };
+          return await addProject(data);
+        } else {
+          const newClient = await Client.create(client);
+          const data: any = { client: newClient._id, notes, description,projectTotal };
+          return await addProject(data);
         }
-        await addProject(data);
+
       } else {
-        const newClient = await Client.create(client);
-        const data: any = { client: newClient._id, notes, description };
-        if (data.isApproved) {
-          data.orderStatus = OrderStatus.DRAWING;
+        return {
+          error: {
+            message: "Mandatory fields not filled"
+          }
         }
-        await addProject(data);
       }
 
     } catch (err) {
@@ -54,7 +63,7 @@ export class ProjectService {
     try {
       return await listProject();
     } catch (err) {
-      console.log("Error occured while getting project list",err);
+      console.log("Error occured while getting project list", err);
       throw err;
     }
   };
@@ -63,19 +72,21 @@ export class ProjectService {
     try {
       return await getProject(id);
     } catch (err) {
-      console.log("Error occured while getting project list",err);
+      console.log("Error occured while getting project list", err);
       throw err;
     }
   };
-  //order entering complete (orderStatus=1) Note: will move to drawing status if approved
+  //not using in controller - order entering complete (orderStatus=1) Note: will move to drawing status if approved
   orderEnteringUpdate = async (data: any) => {
     try {
       const projectId = data.id;
-      if (data.isApproved) {
-        data.orderStatus = OrderStatus.DRAWING;
+      if (data.client.name && data.client.mob && data.client.add.city) {
+        const project = await updateProject(projectId, data);
+        return project;
       }
-      const project = await updateProject(projectId, data);
-      return project;
+      return {
+        status: 'failed',
+      }
     } catch (err) {
       console.log("Error occured while updating order");
       throw err;
@@ -86,11 +97,25 @@ export class ProjectService {
     try {
       const projectId = data.id;
       const file = data.file;
-      const project = await addDrawingFile(projectId, file);
-      if (data.isApproved) {
-        await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.MATERIAL_ESTIMATE }, { new: true }); //----------------------------
+      let project;
+      console.log(file);
+      
+      if (file.length > 0) {
+        project = await addDrawingFile(projectId, file);
       }
-      return { message: "data saved successfully" };
+
+      if ((typeof data.isApproved === "string" && data.isApproved === "true") || (data.isApproved === true)) {
+        project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.MATERIAL_ESTIMATE }, { new: true }); //----------------------------
+      }
+      if (project) {
+        return project;
+      } else {
+        return {
+          error: {
+            message: "No proper data found"
+          }
+        }
+      }
     } catch (err) {
       console.log("Error occured while drawing complete order");
       throw err;
@@ -100,36 +125,46 @@ export class ProjectService {
   materialEstimate = async (data: any) => {
     try {
       const projectId = data.id;
-      const project: any = await getProject(projectId);
-      //items are getting added(if item_id is null) and updated
-      data.item = await Promise.all(data.item.map(async (el: any) => {
-        let item;
-        //if item_id exist in data set
-        if (el.item_id) {
-          //updates item with given data
-          item = await Item.findByIdAndUpdate(el.item_id, el, { upsert: true, new: true });
+      const { item } = data;
+      let project: any;
+      if (item.length > 0) {
+        project = await getProject(projectId);
+        //items are getting added(if item_id is null) and updated
+        data.item = await Promise.all(data.item.map(async (el: any) => {
+          let item;
+          //if item_id exist in data set
+          if (el.item_id) {
+            //updates item with given data
+            item = await Item.findByIdAndUpdate(el.item_id, el, { upsert: true, new: true });
+          } else {
+            //creates item with given data
+            item = await Item.create(el);
+          }
+          el.item_id = item._id;
+          return el;
+        }));
+        //if project have existing material_details
+        if (project?.material_details) {
+          //update material details
+          const materialId = project.material_details._id
+          project = await Material.findOneAndUpdate({ _id: materialId }, data, { new: true });
         } else {
-          //creates item with given data
-          item = await Item.create(el);
+          //create material details and update to project
+          const newMaterial = await Material.create(data);
+          project = await addMaterialIdToProject(projectId, newMaterial._id);
         }
-        el.item_id = item._id;
-        return el;
-      }));
-      //if project have existing material_details
-      if (project?.material_details) {
-        //update material details
-        const materialId = project.material_details._id
-        await Material.findOneAndUpdate({ _id: materialId }, data, { new: true });
+        //approve to next orderStatus
+        if (data?.isApproved) {
+          project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.WAITING_CONFIRMATION }, { new: true }); //----------------------------
+        }
       } else {
-        //create material details and update to project
-        const newMaterial = await Material.create(data);
-        await addMaterialIdToProject(projectId, newMaterial._id);
+        return {
+          error: {
+            message: "No proper data found"
+          }
+        }
       }
-      //approve to next orderStatus
-      if (data?.isApproved) {
-        await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.WAITING_CONFIRMATION }, { new: true }); //----------------------------
-      }
-      return { message: "data saved successfully" };
+      return project;
     } catch (err) {
       console.log("Error Material Estimate order");
       throw err;
@@ -146,19 +181,29 @@ export class ProjectService {
         amount,
         paymentType,
       };
-      const project = await Project.findOneAndUpdate(
-        { _id: projectId },
-        {
-          $push: {
-            transactionDetails: transactionDetails,
+      let project;
+      if (amount && paymentType) {
+        project = await Project.findOneAndUpdate(
+          { _id: projectId },
+          {
+            $push: {
+              transactionDetails: transactionDetails,
+            },
           },
-        },
-        { new: true }
-      );
-      if (data.isApproved) {
-        await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.MATERIAL_ARRIVAL }, { new: true }); //----------------------------
+          { new: true }
+        );
       }
-      return { message: "data saved successfully" };
+      if (data.isApproved) {
+        project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.MATERIAL_ARRIVAL }, { new: true }); //----------------------------
+      }
+      if (project) {
+        return project;
+      }
+      return {
+        error: {
+          message: "No proper data found"
+        }
+      }
     } catch (err) {
       console.log("Error occured while entering order confirmation");
       throw err;
@@ -169,11 +214,21 @@ export class ProjectService {
     try {
       const projectId = data.id;
       const { isArrived, priority, estDateOfArrival } = data
-      const newProject = await Project.findOneAndUpdate({ _id: projectId }, { isArrived, priority, estDateOfArrival }, { new: true });
-      if (data.isApproved) {
-        await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.PRODUCTION }, { new: true }); //----------------------------
+      let project;
+      if (priority || estDateOfArrival) {
+        project = await Project.findOneAndUpdate({ _id: projectId }, { isArrived, priority, estDateOfArrival }, { new: true });
       }
-      return { message: "data saved successfully" };
+      if (data.isApproved && data.isArrived) {
+        project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.PRODUCTION }, { new: true }); //----------------------------
+      }
+      if (project) {
+        return project;
+      }
+      return {
+        error: {
+          message: "No proper data found"
+        }
+      };
     } catch (err) {
       console.log("Error occured while estimate arrival order");
       throw err;
@@ -183,34 +238,47 @@ export class ProjectService {
   productionUpdation = async (data: any) => {
     try {
       const projectId = data.id;
-      const project = await getProject(projectId);
-      if (project?.production_details) {
+      const { inCharge, productionStatus } = data;
+      let project;
+      // if not proper data
+      if (inCharge && productionStatus) {
+        project = await getProject(projectId);
 
-        const productionDetails: any = project.production_details;
+        if (project?.production_details) {
 
-        //setting status from list of production data
-        let productionStatus;
-        Object.values(data.productionStatus).forEach((valueObj:any,index:number)=>{
-          if(valueObj.percentCompleted>0){
-            productionStatus=index+1;
-          }
-        })
-        data.status = productionStatus;
+          const productionDetails: any = project.production_details;
 
-        //updating with production details
-        await Production.findOneAndUpdate({ _id: productionDetails._id }, data)
-      } else {
+          //setting status from list of production data
+          let productionStatus;
+          Object.values(data.productionStatus).forEach((valueObj: any, index: number) => {
+            if (valueObj.percentCompleted > 0) {
+              productionStatus = index + 1;
+            }
+          })
+          data.status = productionStatus;
 
-        //new production collection create and linking with existing project
-        const newProductionDetails = await Production.create(data);
-        await addProductionIdToProject(projectId, newProductionDetails._id);
+          //updating with production details
+          project = await Production.findOneAndUpdate({ _id: productionDetails._id }, data)
+        } else {
+
+          //new production collection create and linking with existing project
+          const newProductionDetails = await Production.create(data);
+          project = await addProductionIdToProject(projectId, newProductionDetails._id);
+        }
       }
-      
+
       //if approved status updation to next step
-      if (data.isApproved) {
-        await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.DELIVERY }, { new: true }); //----------------------------
+      if (data.isApproved && data.isCompleted) {
+        project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.DELIVERY }, { new: true }); //----------------------------
       }
-      return { message: "data saved successfully" };
+      if (project) {
+        return project;
+      }
+      return {
+        error: {
+          message: "No proper data found"
+        }
+      };
     } catch (err) {
       console.log("Error occured while production updates");
       throw err;
@@ -220,12 +288,22 @@ export class ProjectService {
   deliveryUpdation = async (data: any) => {
     try {
       const projectId = data.id;
-      const { driverNumber, vehicleNumber } = data
-      const newProject = await Project.findOneAndUpdate({ _id: projectId }, { delivery: { driverNumber, vehicleNumber, date: Date.now() } }, { new: true });
-      if (data.isApproved) {
-        await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.INSTALLATION }, { new: true }); //----------------------------
+      const { driverNumber, vehicleNumber, furnitureList } = data
+      let project;
+      if (driverNumber && vehicleNumber && furnitureList) {
+        project = await Project.findOneAndUpdate({ _id: projectId }, { delivery: { driverNumber, vehicleNumber }, furnitureList }, { new: true });
       }
-      return { message: "data saved successfully" };
+      if (data.isApproved && data.isDelivered) {
+        project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.INSTALLATION, "delivery.date": Date.now() }, { new: true }); //----------------------------
+      }
+      if (project) {
+        return project;
+      }
+      return {
+        error: {
+          message: "No proper data found"
+        }
+      };
     } catch (err) {
       console.log("Error occured while delivery updates");
       throw err;
@@ -235,12 +313,31 @@ export class ProjectService {
   installationUpdate = async (data: any) => {
     try {
       const projectId = data.id;
-      const file = data.file;
-      const project = await addInstallationFile(projectId, file);
-      if (data.isApproved) {
-        await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.AWAITING_SERVICE, installationDate: Date.now() }, { new: true }); //----------------------------
+      const { furnitureList, inCharge, extraExpense, serviceAfter, installationStatus, dayWorkNote, workersData } = data
+      let project;
+      if (inCharge) {
+        project = await Project.findOneAndUpdate({ _id: projectId }, { furnitureList, installationData: { inCharge, extraExpense, serviceAfter, installationStatus, workersData } }, { new: true });
+        if (dayWorkNote) {
+          project = await Project.findOneAndUpdate({ _id: projectId }, {
+            $push: {
+              'installationData.dayWorkNote': { text: dayWorkNote, date: Date.now() }
+            },
+          }, {
+            new: true
+          })
+        }
       }
-      return { message: "data saved successfully" };
+      if (data.isApproved && data.serviceAfter) {
+        project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.INSTALLATION, "delivery.date": Date.now() }, { new: true }); //----------------------------
+      }
+      if (project) {
+        return project;
+      }
+      return {
+        error: {
+          message: "No proper data found"
+        }
+      };
     } catch (err) {
       console.log("Error occured while installation updates");
       throw err;
@@ -270,7 +367,7 @@ export class ProjectService {
       const file = data.file;
       const project = await addServiceReportFile(projectId, file);
 
-      if (data.isApproved) {
+      if ((typeof data.isApproved === "string" && data.isApproved === "true") || (data.isApproved === true)) {
         await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.TO_CLOSE }, { new: true }); //----------------------------
       }
       return { message: "data saved successfully" };
@@ -286,7 +383,7 @@ export class ProjectService {
       const file = data.file;
       const project = await addClosingReportFile(projectId, file);
 
-      if (data.isApproved) {
+      if ((typeof data.isApproved === "string" && data.isApproved === "true") || (data.isApproved === true)) {
         await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.CLOSED }, { new: true }); //----------------------------
       }
       return { message: "data saved successfully" };
@@ -303,6 +400,59 @@ export class ProjectService {
       return { message: "data saved successfully" };
     } catch (err) {
       console.log("Error occured while entering order");
+      throw err;
+    }
+  }
+  //fileUpload
+  fileUpload = async (data: any) => {
+    try {
+      //projectId
+      const projectId = data.id;
+      //file and key
+      const { file, key } = data;
+      if (file.length > 0) {
+        if (key === "close") {
+          return await addClosingReportFile(projectId, file);
+        } else if (key === "service") {
+          return await addServiceReportFile(projectId, file);
+        } else if (key === "installation") {
+          return await addInstallationFile(projectId, file);
+        } else if (key === "drawing") {
+          return await addDrawingFile(projectId, file);
+        } else if (key === "invoice") {
+          return await addMaterialEstimateFile(projectId, file)
+        } else {
+          return {
+            error: {
+              message: "No proper data found"
+            }
+          }
+        }
+      }
+      return {
+        error: {
+          message: "No proper data found"
+        }
+      }
+    } catch (err) {
+      console.log("Error occured while drawing complete order");
+      throw err;
+    }
+  }
+  //fileUpload
+  deleteFile = async (projectId: any, fileId: any, key: any) => {
+    try {
+      const result = await deleteFile(projectId, fileId, key);
+      if (!result) {
+        return {
+          error: {
+            message: "No database items matching given data"
+          }
+        }
+      }
+      return result;
+    } catch (err) {
+      console.log("Error occured while drawing complete order");
       throw err;
     }
   }

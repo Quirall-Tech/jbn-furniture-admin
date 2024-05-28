@@ -28,7 +28,7 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
-      enum: ["MD", "GM", "HR", "OM", "PM", "SV", "WR", "CU", "US"],
+      enum: ["MD", "GM","AC","DE", "HR", "OM", "PM", "SV", "WR", "CU", "US"],
       default: "US",
       required: [true, "Role is required"],
     },

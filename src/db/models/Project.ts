@@ -1,5 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-import { string } from "zod";
 
 const projectSchema = new Schema(
     {
@@ -29,6 +28,9 @@ const projectSchema = new Schema(
         },
         materialArrivedDate: {
             type: Date,
+        },
+        projectTotal: {
+            type: Number,
         },
         priority: {
             type: String,
@@ -61,12 +63,12 @@ const projectSchema = new Schema(
             vehicleNumber: {
                 type: String
             },
-            date:{
-                type:Date
+            date: {
+                type: Date
             }
         },
-        installationDate:{
-            type:Date,
+        installationDate: {
+            type: Date,
         },
         attachments: {
             drawingFile: [
@@ -82,7 +84,7 @@ const projectSchema = new Schema(
                     }
                 }
             ],
-            materialEstimateFile: [
+            invoiceFile: [
                 {
                     url: {
                         type: String,
@@ -134,7 +136,55 @@ const projectSchema = new Schema(
                     }
                 }
             ],
-
+        },
+        furnitureList: [{
+            area: String,
+            text: String,
+            isChecked: { type: Boolean, default: false },
+        }],
+        installationData: {
+            inCharge: String,
+            extraExpense: {
+                food: Number,
+                travel: Number,
+                accomodation: Number,
+            },
+            serviceAfter: Number,
+            installationStatus: {
+                1: {
+                    percentCompleted: Number,
+                    isStarted: { type: Boolean, default: false }
+                },
+                2: {
+                    percentCompleted: Number,
+                    isStarted: { type: Boolean, default: false }
+                },
+                3: {
+                    percentCompleted: Number,
+                    isStarted: { type: Boolean, default: false }
+                },
+                4: {
+                    percentCompleted: Number,
+                    isStarted: { type: Boolean, default: false }
+                },
+                5: {
+                    percentCompleted: Number,
+                    isStarted: { type: Boolean, default: false }
+                },
+                6: {
+                    percentCompleted: Number,
+                    isStarted: { type: Boolean, default: false }
+                }
+            },
+            dayWorkNote: [{ text: String, date: Date }],
+            workersData: [
+                {
+                    name: String,
+                    hours: Number,
+                    perHourWage: Number,
+                    subTotal: Number,
+                }
+            ],
         },
         production_details: {
             type: mongoose.Types.ObjectId,
