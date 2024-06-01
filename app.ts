@@ -19,7 +19,7 @@ envVariables.parse(process.env);
 const app = express();
 
 const corsOptions = {
-  origin: ["http://localhost:4200", "*"],
+  origin: ["http://localhost:4200", "https://jbn-modular.netlify.app", "https://www.jbn-modular.online","https://www.jbn-modular.com"],
   credentials: true
 };
 const port = process.env.PORT || 3000;
