@@ -16,6 +16,7 @@ import {
   cancellation,
   fileUpload,
   deleteFile,
+  updateProject,
 } from "../controllers/project.controller";
 import { authMiddleWare } from "../middlewares/auth.middleware";
 import { upload } from "../middlewares/multer.middleware";
@@ -43,5 +44,8 @@ router.route("/deleteFile/:id").post(deleteFile)
 
 //get project
 router.route("/:id").post(getProject);
+
+//update project
+router.route("/:id").put(updateProject);
 
 

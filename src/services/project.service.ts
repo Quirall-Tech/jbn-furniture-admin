@@ -13,10 +13,8 @@ import {
   getProject,
   listProject,
   updateProject,
-  updateStatus,
 } from "../dao/project.dao";
 import { Material } from "../db/models/Material";
-import mongoose, { Error } from "mongoose";
 import { Production } from "../db/models/Production";
 import { Item } from "../db/models/Item";
 import { OrderStatus } from "../common/constants";
@@ -25,9 +23,9 @@ export class ProjectService {
   //create new project
   createProject = async (data: any) => {
     try {
-      const { client, notes, description,projectTotal } = data;
+      const { client, notes, description, projectTotal } = data;
       //data contains mob, name and city of client
-      
+
       if (client.mob && client.name && client.add.city) {
         const checkClient = await Client.findOne({ mob: client.mob });
         //check client in db
@@ -41,7 +39,7 @@ export class ProjectService {
           return await addProject(data);
         } else {
           const newClient = await Client.create(client);
-          const data: any = { client: newClient._id, notes, description,projectTotal };
+          const data: any = { client: newClient._id, notes, description, projectTotal };
           return await addProject(data);
         }
 
@@ -80,13 +78,25 @@ export class ProjectService {
   orderEnteringUpdate = async (data: any) => {
     try {
       const projectId = data.id;
-      if (data.client.name && data.client.mob && data.client.add.city) {
-        const project = await updateProject(projectId, data);
+      let project;
+      if (data.client && data.furnitureList && data.projectTotal) {
+        project = await updateProject(projectId, data);
         return project;
       }
-      return {
-        status: 'failed',
+      //approve to next orderStatus
+      if (data?.isApproved) {
+        project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.DRAWING }, { new: true }); //----------------------------
       }
+      if (project) {
+        return project;
+      } else {
+        return {
+          error: {
+            message: "No proper data found"
+          }
+        }
+      }
+
     } catch (err) {
       console.log("Error occured while updating order");
       throw err;
@@ -99,7 +109,7 @@ export class ProjectService {
       const file = data.file;
       let project;
       console.log(file);
-      
+
       if (file.length > 0) {
         project = await addDrawingFile(projectId, file);
       }
@@ -268,7 +278,7 @@ export class ProjectService {
       }
 
       //if approved status updation to next step
-      if (data.isApproved && data.isCompleted) {
+      if (data.isApproved) {
         project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.DELIVERY }, { new: true }); //----------------------------
       }
       if (project) {
@@ -288,9 +298,9 @@ export class ProjectService {
   deliveryUpdation = async (data: any) => {
     try {
       const projectId = data.id;
-      const { driverNumber, vehicleNumber, furnitureList } = data
+      const { driverNumber, vehicleNumber, furnitureList } = data;
       let project;
-      if (driverNumber && vehicleNumber && furnitureList) {
+      if (driverNumber && vehicleNumber) {
         project = await Project.findOneAndUpdate({ _id: projectId }, { delivery: { driverNumber, vehicleNumber }, furnitureList }, { new: true });
       }
       if (data.isApproved && data.isDelivered) {

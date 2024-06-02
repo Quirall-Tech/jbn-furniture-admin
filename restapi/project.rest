@@ -131,19 +131,16 @@ Content-Type: application/json
   "estDateOfArrival": 1716140537329
 }
 ###
-POST http://localhost:3000/project/delivery/665639ae156de0d0e188b72e HTTP/1.1
+POST https://www.naskobuilders.com/project/delivery/665b1e9f7538b452eb0503a8 HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJmM2ZmOTNhNDVjNmQ1NjIyNTg2ZjkiLCJ1c2VybmFtZSI6Im1pc2hhbCIsInBhc3N3b3JkIjoiJDJiJDEwJEhkeDlZb1ZVaVJ4TUVQVm1meGRoRC5Ea2JGSWRpSXlxNFFvbklEbUhGRTRKM0tKRnk2Zk1pIiwicm9sZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJfX3YiOjAsImlhdCI6MTcxNDM3OTg2MH0.VPOthOyUbb_-E1OvwaMtrCyQk7ItvOetsG1nq0sCvoo
 Content-Type: application/json
 
 {
   "isApproved":true,
-  "driverNumber": 9876543210,
-  "vehicleNumber":"KL11JJ0987",
-  "isDelivered":true,
-  "furnitureList":[{"area":"kitchen","text":"enthenkilum"}]
+  "isDelivered":true
 }
 ###
-POST http://localhost:3000/project/installation/665639ae156de0d0e188b72e HTTP/1.1
+POST http://localhost:3000/project/installation/665b1e9f7538b452eb0503a8 HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJmM2ZmOTNhNDVjNmQ1NjIyNTg2ZjkiLCJ1c2VybmFtZSI6Im1pc2hhbCIsInBhc3N3b3JkIjoiJDJiJDEwJEhkeDlZb1ZVaVJ4TUVQVm1meGRoRC5Ea2JGSWRpSXlxNFFvbklEbUhGRTRKM0tKRnk2Zk1pIiwicm9sZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJfX3YiOjAsImlhdCI6MTcxNDM3OTg2MH0.VPOthOyUbb_-E1OvwaMtrCyQk7ItvOetsG1nq0sCvoo
 Content-Type: application/json
 

@@ -4,7 +4,7 @@ const projectSchema = new Schema(
     {
         orderStatus: {
             type: Number,
-            default: 2,
+            default: 1,
             required: [true, "orderStatus is required"]
         },
         orderNumber: {
@@ -138,9 +138,9 @@ const projectSchema = new Schema(
             ],
         },
         furnitureList: [{
-            area: String,
             text: String,
-            isChecked: { type: Boolean, default: false },
+            isDelivered: { type: Boolean, default: false },
+            isInstalled: { type: Boolean, default: false },
         }],
         installationData: {
             inCharge: String,

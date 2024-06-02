@@ -1,5 +1,4 @@
 import { addItem, deleteItem, getItem, getItemByName, listItem, updateItem } from "../dao/item.dao";
-import { Item } from "../db/models/Item";
 export class ItemService {
 
   addItem = async (data: any) => {
