@@ -17,7 +17,11 @@ Content-Type: application/json
     },
     "projectTotal":13123,
     "notes":"new",
-    "description":"new"
+    "furnitureList":[
+      {"text":"adf"},
+      {"text":"adf"},
+      {"text":"adf"},
+    ]
 }
 
 ###
@@ -28,7 +32,31 @@ Content-Type: application/json
 
 {
 }
+###
 
+PUT http://localhost:3000/project/665639ae156de0d0e188b72e HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJmM2ZmOTNhNDVjNmQ1NjIyNTg2ZjkiLCJ1c2VybmFtZSI6Im1pc2hhbCIsInBhc3N3b3JkIjoiJDJiJDEwJEhkeDlZb1ZVaVJ4TUVQVm1meGRoRC5Ea2JGSWRpSXlxNFFvbklEbUhGRTRKM0tKRnk2Zk1pIiwicm9sZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJfX3YiOjAsImlhdCI6MTcxNDM3OTg2MH0.VPOthOyUbb_-E1OvwaMtrCyQk7ItvOetsG1nq0sCvoo
+Content-Type: application/json
+
+{
+      "client":{
+        "name":"Dheraj",
+        "mob":9072441214,
+        "email":"dj@gmail.com",
+        "add":{
+            "city":"Calicut",
+            "location":"Near GLP School",
+            "link":"path/of/googlemaps"
+        }
+    },
+    "projectTotal":13123,
+    "notes":"new",
+    "furnitureList":[
+      {"text":"adf"},
+      {"text":"adf"},
+      {"text":"adf"},
+    ]
+}
 ###
 
 POST http://localhost:3000/project/665639ae156de0d0e188b72e HTTP/1.1
@@ -153,7 +181,7 @@ Content-Type: application/json
     "accomodation":123
   },
   "serviceAfter":10,
-  "furnitureList":[{"area":"kitchen","text":"adf","isChecked":true}],
+  "furnitureList":[{"text":"adf","isInstalled":true}],
   "installationStatus": {
     "1": {
       "percentCompleted": 10,
