@@ -23,7 +23,7 @@ export class ProjectService {
   //create new project
   createProject = async (data: any) => {
     try {
-      const { client, notes, description, projectTotal } = data;
+      const { client, notes, description, projectTotal, furnitureList } = data;
       //data contains mob, name and city of client
 
       if (client.mob && client.name && client.add.city) {
@@ -34,12 +34,13 @@ export class ProjectService {
             client: checkClient._id,
             notes,
             description,
-            projectTotal
+            projectTotal,
+            furnitureList
           };
           return await addProject(data);
         } else {
           const newClient = await Client.create(client);
-          const data: any = { client: newClient._id, notes, description, projectTotal };
+          const data: any = { client: newClient._id, notes, description, projectTotal, furnitureList };
           return await addProject(data);
         }
 
@@ -79,9 +80,11 @@ export class ProjectService {
     try {
       const projectId = data.id;
       let project;
-      if (data.client && data.furnitureList && data.projectTotal) {
+      const { client, furnitureList, projectTotal } = data;
+      if (client && (furnitureList || projectTotal)) {
+        const updateClient:any = await Client.findOneAndUpdate({ mob: client.mob }, { name: client.name, email: client.email, 'add.city': client.add.city, 'add.location': client.add.location, 'add.link': client.add.link }, { multi: false,new:true });
+        data.client = updateClient._id;
         project = await updateProject(projectId, data);
-        return project;
       }
       //approve to next orderStatus
       if (data?.isApproved) {
@@ -98,7 +101,7 @@ export class ProjectService {
       }
 
     } catch (err) {
-      console.log("Error occured while updating order");
+      console.log("Error occured while updating order", err);
       throw err;
     }
   };
@@ -248,7 +251,7 @@ export class ProjectService {
   productionUpdation = async (data: any) => {
     try {
       const projectId = data.id;
-      const { inCharge, productionStatus } = data;
+      const { inCharge, productionStatus, furnitureList } = data;
       let project;
       // if not proper data
       if (inCharge && productionStatus) {
@@ -275,6 +278,9 @@ export class ProjectService {
           const newProductionDetails = await Production.create(data);
           project = await addProductionIdToProject(projectId, newProductionDetails._id);
         }
+      }
+      if(furnitureList){
+       project =  await Project.findOneAndUpdate({_id:projectId}, {furnitureList},{new:true});
       }
 
       //if approved status updation to next step

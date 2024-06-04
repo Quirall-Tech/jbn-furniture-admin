@@ -34,8 +34,8 @@ router.route("/production/:id").post(productionUpdates);
 router.route("/delivery/:id").post(deliveryUpdate);
 router.route("/installation/:id").post(installationUpdate);
 router.route("/awaiting-service/:id").post(awaitingService);
-router.route("/service/:id").post(serviceUpdate);
-router.route("/close/:id").post(closingUpdate);
+router.route("/service/:id").post(upload.array('service'),serviceUpdate);
+router.route("/close/:id").post(upload.array('close'),closingUpdate);
 router.route("/cancel/:id").post(cancellation);
 //file upload
 router.route("/fileUpload/:id").post(upload.array('file'),fileUpload)

@@ -13,7 +13,8 @@ export const addProject = async (data: any) => {
 };
 export const updateProject = async (id: any, data: any) => {
   try {
-    const project = await Project.findOneAndUpdate({ _id: id }, { ...data }, { new: true });
+    const { client, projectTotal, notes, furnitureList } = data;
+    const project = await Project.findOneAndUpdate({ _id: id }, { client, projectTotal, notes, furnitureList: [...furnitureList] }, { new: true });
     return project
 
   } catch (err) {
@@ -181,18 +182,18 @@ export const listProject = async () => {
     throw err;
   }
 };
-export const deleteFile = async (projectId:any,fileId:any,key:any) => {
+export const deleteFile = async (projectId: any, fileId: any, key: any) => {
   try {
     if (key === "close") {
-      return await Project.findByIdAndUpdate(projectId,{ $pull: { "attachments.closingReportFile": { _id: fileId } } },{multi:false,new:true});
+      return await Project.findByIdAndUpdate(projectId, { $pull: { "attachments.closingReportFile": { _id: fileId } } }, { multi: false, new: true });
     } else if (key === "service") {
-      return await Project.findByIdAndUpdate(projectId,{ $pull: { "attachments.serviceReportFile": { _id: fileId } } },{multi:false,new:true});
+      return await Project.findByIdAndUpdate(projectId, { $pull: { "attachments.serviceReportFile": { _id: fileId } } }, { multi: false, new: true });
     } else if (key === "installation") {
-      return await Project.findByIdAndUpdate(projectId,{ $pull: { "attachments.installationFile": { _id: fileId } } },{multi:false,new:true});
+      return await Project.findByIdAndUpdate(projectId, { $pull: { "attachments.installationFile": { _id: fileId } } }, { multi: false, new: true });
     } else if (key === "drawing") {
-      return await Project.findByIdAndUpdate(projectId,{ $pull: { "attachments.drawingFile": { _id: fileId } } },{multi:false,new:true});
+      return await Project.findByIdAndUpdate(projectId, { $pull: { "attachments.drawingFile": { _id: fileId } } }, { multi: false, new: true });
     } else if (key === "invoice") {
-      return await Project.findByIdAndUpdate(projectId,{ $pull: { "attachments.invoiceFile": { _id: fileId } } },{multi:false,new:true});
+      return await Project.findByIdAndUpdate(projectId, { $pull: { "attachments.invoiceFile": { _id: fileId } } }, { multi: false, new: true });
     } else {
       return {
         error: {
