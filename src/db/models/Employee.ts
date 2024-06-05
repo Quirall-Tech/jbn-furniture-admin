@@ -11,7 +11,7 @@ const empSchema = new Schema(
         unique:true,
         required:[true,'mobile of employee is required']
     },
-    pricePerHour: {
+    perHourWage: {
       type: Number,
       required: [true, "Price per hour is required"],
     },

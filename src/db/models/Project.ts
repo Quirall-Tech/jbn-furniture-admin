@@ -179,10 +179,10 @@ const projectSchema = new Schema(
             dayWorkNote: [{ text: String, date: Date }],
             workersData: [
                 {
+                    workerId:String,
                     name: String,
                     hours: Number,
                     perHourWage: Number,
-                    subTotal: Number,
                 }
             ],
         },

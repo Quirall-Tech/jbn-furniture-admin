@@ -18,6 +18,7 @@ import { Material } from "../db/models/Material";
 import { Production } from "../db/models/Production";
 import { Item } from "../db/models/Item";
 import { OrderStatus } from "../common/constants";
+import { Employee } from "../db/models/Employee";
 
 export class ProjectService {
   //create new project
@@ -82,7 +83,7 @@ export class ProjectService {
       let project;
       const { client, furnitureList, projectTotal } = data;
       if (client && (furnitureList || projectTotal)) {
-        const updateClient:any = await Client.findOneAndUpdate({ mob: client.mob }, { name: client.name, email: client.email, 'add.city': client.add.city, 'add.location': client.add.location, 'add.link': client.add.link }, { multi: false,new:true });
+        const updateClient: any = await Client.findOneAndUpdate({ mob: client.mob }, { name: client.name, email: client.email, 'add.city': client.add.city, 'add.location': client.add.location, 'add.link': client.add.link }, { multi: false, new: true });
         data.client = updateClient._id;
         project = await updateProject(projectId, data);
       }
@@ -279,8 +280,8 @@ export class ProjectService {
           project = await addProductionIdToProject(projectId, newProductionDetails._id);
         }
       }
-      if(furnitureList){
-       project =  await Project.findOneAndUpdate({_id:projectId}, {furnitureList},{new:true});
+      if (furnitureList) {
+        project = await Project.findOneAndUpdate({ _id: projectId }, { furnitureList }, { new: true });
       }
 
       //if approved status updation to next step
@@ -332,12 +333,37 @@ export class ProjectService {
       const { furnitureList, inCharge, extraExpense, serviceAfter, installationStatus, dayWorkNote, workersData } = data
       let project;
       if (inCharge) {
-        project = await Project.findOneAndUpdate({ _id: projectId }, { furnitureList, installationData: { inCharge, extraExpense, serviceAfter, installationStatus, workersData } }, { new: true });
+        project = await Project.findOneAndUpdate({ _id: projectId }, { furnitureList, installationData: { inCharge, extraExpense, serviceAfter, installationStatus } }, { new: true });
         if (dayWorkNote) {
+          console.log('Before update:', project?.installationData);
           project = await Project.findOneAndUpdate({ _id: projectId }, {
             $push: {
               'installationData.dayWorkNote': { text: dayWorkNote, date: Date.now() }
-            },
+            }
+          }, {
+            new: true
+          })
+          console.log('After update:', project?.installationData);
+        }
+        if (workersData && workersData.length > 0) {
+
+          const allWorkersArr = await Employee.find()
+
+          const mapedWorker = workersData.map((emp: any) => {
+            let matchedWorker = allWorkersArr.find((wrkr: any) => {
+              return emp.workerId == wrkr._id;
+            })
+            if (matchedWorker) {
+              console.log(matchedWorker);
+              console.log(emp);
+              return {workerId:emp.workerId,name:matchedWorker.name,hours:emp.hours,perHourWage:matchedWorker.perHourWage};
+            } else {
+              return null;
+            }
+          }).filter((worker: any) => worker ? true : false)
+
+          project = await Project.findOneAndUpdate({ _id: projectId }, {
+            'installationData.workersData':[...mapedWorker]
           }, {
             new: true
           })
@@ -355,7 +381,7 @@ export class ProjectService {
         }
       };
     } catch (err) {
-      console.log("Error occured while installation updates");
+      console.log("Error occured while installation updates",err);
       throw err;
     }
   };
