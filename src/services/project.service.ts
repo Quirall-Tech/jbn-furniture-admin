@@ -333,9 +333,14 @@ export class ProjectService {
       const { furnitureList, inCharge, extraExpense, serviceAfter, installationStatus, dayWorkNote, workersData } = data
       let project;
       if (inCharge) {
-        project = await Project.findOneAndUpdate({ _id: projectId }, { furnitureList, installationData: { inCharge, extraExpense, serviceAfter, installationStatus } }, { new: true });
+        project = await Project.findOneAndUpdate({ _id: projectId }, { 
+          furnitureList, 
+          "installationData.inCharge":inCharge,
+          "installationData.extraExpense":extraExpense,
+          "installationData.serviceAfter":serviceAfter,
+          "installationData.installationStatus":installationStatus}, { new: true });
         if (dayWorkNote) {
-          console.log('Before update:', project?.installationData);
+          console.log('before update:', project?.installationData);
           project = await Project.findOneAndUpdate({ _id: projectId }, {
             $push: {
               'installationData.dayWorkNote': { text: dayWorkNote, date: Date.now() }
@@ -343,7 +348,7 @@ export class ProjectService {
           }, {
             new: true
           })
-          console.log('After update:', project?.installationData);
+          console.log('after update:', project?.installationData);
         }
         if (workersData && workersData.length > 0) {
 
