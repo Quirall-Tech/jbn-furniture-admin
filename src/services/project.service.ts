@@ -385,7 +385,7 @@ export class ProjectService {
         }
       }
       if (data.isApproved && data.serviceAfter) {
-        project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.INSTALLATION, "delivery.date": Date.now() }, { new: true }); //----------------------------
+        project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.AWAITING_SERVICE, "delivery.date": Date.now() }, { new: true }); //----------------------------
       }
       if (project) {
         return project;
