@@ -17,6 +17,7 @@ import {
   fileUpload,
   deleteFile,
   updateProject,
+  statusCount,
 } from "../controllers/project.controller";
 import { authMiddleWare } from "../middlewares/auth.middleware";
 import { upload } from "../middlewares/multer.middleware";
@@ -37,15 +38,17 @@ router.route("/awaiting-service/:id").post(awaitingService);
 router.route("/service/:id").post(upload.array('service'),serviceUpdate);
 router.route("/close/:id").post(upload.array('close'),closingUpdate);
 router.route("/cancel/:id").post(cancellation);
-//file upload
+//add file upload
 router.route("/fileUpload/:id").post(upload.array('file'),fileUpload)
-//file delete
+//delete file upload
 router.route("/deleteFile/:id").post(deleteFile)
 
 //get project
 router.route("/:id").post(getProject);
-
 //update project
 router.route("/:id").put(updateProject);
+
+//status-count
+router.route("/status-count").get(statusCount);
 
 

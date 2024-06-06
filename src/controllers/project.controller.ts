@@ -297,3 +297,17 @@ export const deleteFile = async (req: Request, res: Response) => {
     res.status(500).json({ status: "Internal Server Error", message: err });
   }
 };
+
+export const statusCount = async (req: Request, res: Response) => {
+  try {
+      const result: any = await projectService.statusCount();
+
+      if (result?.error) {
+        res.status(400).json({ status: "failed", message: result.error.message });
+      } else {
+        res.status(200).json({ status: "success", data: result });
+      }
+  } catch (err) {
+    res.status(500).json({ status: "Internal Server Error", message: err });
+  }
+};

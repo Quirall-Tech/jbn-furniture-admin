@@ -162,7 +162,7 @@ Content-Type: application/json
   "isDelivered":true
 }
 ###
-POST http://localhost:3000/project/installation/665b1e9f7538b452eb0503a8 HTTP/1.1
+POST http://localhost:3000/project/installation/6650a70e459bcb102b0e5c6e HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJmM2ZmOTNhNDVjNmQ1NjIyNTg2ZjkiLCJ1c2VybmFtZSI6Im1pc2hhbCIsInBhc3N3b3JkIjoiJDJiJDEwJEhkeDlZb1ZVaVJ4TUVQVm1meGRoRC5Ea2JGSWRpSXlxNFFvbklEbUhGRTRKM0tKRnk2Zk1pIiwicm9sZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJfX3YiOjAsImlhdCI6MTcxNDM3OTg2MH0.VPOthOyUbb_-E1OvwaMtrCyQk7ItvOetsG1nq0sCvoo
 Content-Type: application/json
 
@@ -174,8 +174,8 @@ Content-Type: application/json
     "travel":123,
     "accomodation":123
   },
-  "serviceAfter":10,
-  "furnitureList":[{"text":"adf","isInstalled":true}],
+  "serviceAfter":12,
+  "furnitureList":[{"text":"sfsdsdfs","isInstalled":true}],
   "installationStatus": {
     "1": {
       "percentCompleted": 10,
@@ -202,19 +202,11 @@ Content-Type: application/json
       "isStarted": false
     }
   },
-  "dayWorkNote":"some work notes",
+  "dayWorkNote":"some work notes555",
   "workersData": [
     {
-      "name":"suraj",
-      "hours":12,
-      "perHourWage":123,
-      "subTotal": 222
-    },
-    {
-      "name":"deepak",
-      "hours":45,
-      "perHourWage":123,
-      "subTotal": 3453
+      "workerId":"6660b5d7630d438a144e9879",
+      "hours":12
     }
   ]
 
@@ -275,3 +267,7 @@ Content-Type: application/json
   "fileId":"66563b33c252e883e292f459",
   "key":"drawing"
 }
+###
+GET  http://localhost:3000/project/status-count HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJmM2ZmOTNhNDVjNmQ1NjIyNTg2ZjkiLCJ1c2VybmFtZSI6Im1pc2hhbCIsInBhc3N3b3JkIjoiJDJiJDEwJEhkeDlZb1ZVaVJ4TUVQVm1meGRoRC5Ea2JGSWRpSXlxNFFvbklEbUhGRTRKM0tKRnk2Zk1pIiwicm9sZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJfX3YiOjAsImlhdCI6MTcxNDM3OTg2MH0.VPOthOyUbb_-E1OvwaMtrCyQk7ItvOetsG1nq0sCvoo
+Content-Type: application/json

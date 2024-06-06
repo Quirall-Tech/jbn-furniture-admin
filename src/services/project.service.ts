@@ -58,6 +58,7 @@ export class ProjectService {
       throw err;
     }
   };
+
   //project listing
   projectList = async () => {
     try {
@@ -67,6 +68,7 @@ export class ProjectService {
       throw err;
     }
   };
+
   //one project details
   getProjectById = async (id: any) => {
     try {
@@ -76,6 +78,7 @@ export class ProjectService {
       throw err;
     }
   };
+
   //not using in controller - order entering complete (orderStatus=1) Note: will move to drawing status if approved
   orderEnteringUpdate = async (data: any) => {
     try {
@@ -106,6 +109,7 @@ export class ProjectService {
       throw err;
     }
   };
+
   //drawing update and complete (orderStatus=2)
   drawingUpdate = async (data: any) => {
     try {
@@ -135,6 +139,7 @@ export class ProjectService {
       throw err;
     }
   };
+
   //material estimate update (orderStatus=3)
   materialEstimate = async (data: any) => {
     try {
@@ -184,6 +189,7 @@ export class ProjectService {
       throw err;
     }
   };
+
   //waiting confirmation complete (orderStatus=4);
   orderConfirmation = async (data: any) => {
     try {
@@ -223,6 +229,7 @@ export class ProjectService {
       throw err;
     }
   };
+
   //arrivalEstimate
   arrivalEstimate = async (data: any) => {
     try {
@@ -248,6 +255,7 @@ export class ProjectService {
       throw err;
     }
   }
+
   //material arrival estimate complete (orderStatus=5)
   productionUpdation = async (data: any) => {
     try {
@@ -301,6 +309,7 @@ export class ProjectService {
       throw err;
     }
   };
+
   //delivery
   deliveryUpdation = async (data: any) => {
     try {
@@ -326,6 +335,7 @@ export class ProjectService {
       throw err;
     }
   }
+
   //installation
   installationUpdate = async (data: any) => {
     try {
@@ -423,6 +433,7 @@ export class ProjectService {
       throw err;
     }
   };
+
   //close
   closingUpdate = async (data: any) => {
     try {
@@ -439,6 +450,7 @@ export class ProjectService {
       throw err;
     }
   }
+
   //cancel
   cancelOrder = async (projectId: any) => {
     try {
@@ -450,6 +462,7 @@ export class ProjectService {
       throw err;
     }
   }
+
   //fileUpload
   fileUpload = async (data: any) => {
     try {
@@ -486,6 +499,7 @@ export class ProjectService {
       throw err;
     }
   }
+
   //fileUpload
   deleteFile = async (projectId: any, fileId: any, key: any) => {
     try {
@@ -500,6 +514,38 @@ export class ProjectService {
       return result;
     } catch (err) {
       console.log("Error occured while drawing complete order");
+      throw err;
+    }
+  }
+
+  //status-count
+  statusCount = async ()=>{
+    try {
+      const result = await Project.aggregate([
+        {
+          $group:{
+            _id:"$orderStatus",
+            count:{$sum:1},
+          }
+        },
+        {
+          $project:{
+            _id:0,
+            orderStatus:"$_id",
+            count:1
+          }
+        }
+      ]);
+      if(result){
+        return result;
+      }
+      return {
+        error: {
+          message: "No proper data found"
+        }
+      };
+    } catch (err) {
+      console.log("Error occured while delivery updates");
       throw err;
     }
   }
