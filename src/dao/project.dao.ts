@@ -167,7 +167,7 @@ export const addServiceReportFile = async (id: any, file: [{ url: String; notes:
 };
 export const listProject = async () => {
   try {
-    const itemList = await Project.find().populate(['client', 'material_details', 'production_details']).populate({
+    const itemList = await Project.find().sort({createdAt:-1}).populate(['client', 'material_details', 'production_details']).populate({
       path: 'material_details',
       populate: {
         path: 'item',
