@@ -271,3 +271,16 @@ Content-Type: application/json
 GET  http://localhost:3000/project/status-count HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJmM2ZmOTNhNDVjNmQ1NjIyNTg2ZjkiLCJ1c2VybmFtZSI6Im1pc2hhbCIsInBhc3N3b3JkIjoiJDJiJDEwJEhkeDlZb1ZVaVJ4TUVQVm1meGRoRC5Ea2JGSWRpSXlxNFFvbklEbUhGRTRKM0tKRnk2Zk1pIiwicm9sZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJfX3YiOjAsImlhdCI6MTcxNDM3OTg2MH0.VPOthOyUbb_-E1OvwaMtrCyQk7ItvOetsG1nq0sCvoo
 Content-Type: application/json
+
+###
+POST  http://localhost:3000/project/edit-transaction/6662f398b0639ca15ff56216 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJmM2ZmOTNhNDVjNmQ1NjIyNTg2ZjkiLCJ1c2VybmFtZSI6Im1pc2hhbCIsInBhc3N3b3JkIjoiJDJiJDEwJEhkeDlZb1ZVaVJ4TUVQVm1meGRoRC5Ea2JGSWRpSXlxNFFvbklEbUhGRTRKM0tKRnk2Zk1pIiwicm9sZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTI5VDA2OjM2OjQxLjE5NloiLCJfX3YiOjAsImlhdCI6MTcxNDM3OTg2MH0.VPOthOyUbb_-E1OvwaMtrCyQk7ItvOetsG1nq0sCvoo
+Content-Type: application/json
+
+{
+  "_id": "66683f05b0639ca15ff56ea4",
+  "amount": 15,
+  "date": 1718139824391,
+  "paymentType": "CASH",
+  "transactionId": "JBN-TID-010-05-24"
+}

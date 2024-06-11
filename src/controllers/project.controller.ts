@@ -117,6 +117,22 @@ export const orderConfirmation = async (req: Request, res: Response) => {
     res.status(500).json({ status: "Internal Server Error", message: err });
   }
 };
+//done
+export const updateTransaction = async (req: Request, res: Response) => {
+  try {
+    const projectId = req.params.id;
+    const data = req.body;
+    data.id = projectId;
+    const result: any = await projectService.updateTransaction(data);
+    if (result?.error) {
+      res.status(400).json({ status: "failed", message: result.error.message });
+    } else {
+      res.status(200).json({ status: "success", data: result });
+    }
+  } catch (err) {
+    res.status(500).json({ status: "Internal Server Error", message: err });
+  }
+};
 // done
 export const productionUpdates = async (req: Request, res: Response) => {
   try {

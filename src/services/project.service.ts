@@ -150,11 +150,12 @@ export class ProjectService {
         project = await getProject(projectId);
         //items are getting added(if item_id is null) and updated
         data.item = await Promise.all(data.item.map(async (el: any) => {
-          let item;
+          let item: any;
           //if item_id exist in data set
           if (el.item_id) {
             //updates item with given data
-            item = await Item.findByIdAndUpdate(el.item_id, el, { upsert: true, new: true });
+            // item = await Item.findByIdAndUpdate(el.item_id, el, { upsert: true, new: true });
+            item = await Item.findOne(el.item_id);
           } else {
             //creates item with given data
             item = await Item.create(el);
@@ -216,6 +217,31 @@ export class ProjectService {
       if (data.isApproved) {
         project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.MATERIAL_ARRIVAL }, { new: true }); //----------------------------
       }
+      if (project) {
+        return project;
+      }
+      return {
+        error: {
+          message: "No proper data found"
+        }
+      }
+    } catch (err) {
+      console.log("Error occured while entering order confirmation");
+      throw err;
+    }
+  };
+
+  //update Transaction
+  updateTransaction = async (data: any) => {
+    try {
+      const projectId = data.id;
+      const { _id, transactionId, amount, date, paymentType } = data;
+
+      const project = await Project.updateOne({ _id: projectId, 'transactionDetails._id': _id },
+        { $set: { 'transactionDetails.$': { transactionId, amount, date, paymentType } } },
+        {new:true}
+      )
+
       if (project) {
         return project;
       }
@@ -343,12 +369,13 @@ export class ProjectService {
       const { furnitureList, inCharge, extraExpense, serviceAfter, installationStatus, dayWorkNote, workersData } = data
       let project;
       if (inCharge) {
-        project = await Project.findOneAndUpdate({ _id: projectId }, { 
-          furnitureList, 
-          "installationData.inCharge":inCharge,
-          "installationData.extraExpense":extraExpense,
-          "installationData.serviceAfter":serviceAfter,
-          "installationData.installationStatus":installationStatus}, { new: true });
+        project = await Project.findOneAndUpdate({ _id: projectId }, {
+          furnitureList,
+          "installationData.inCharge": inCharge,
+          "installationData.extraExpense": extraExpense,
+          "installationData.serviceAfter": serviceAfter,
+          "installationData.installationStatus": installationStatus
+        }, { new: true });
         if (dayWorkNote) {
           console.log('before update:', project?.installationData);
           project = await Project.findOneAndUpdate({ _id: projectId }, {
@@ -371,14 +398,14 @@ export class ProjectService {
             if (matchedWorker) {
               console.log(matchedWorker);
               console.log(emp);
-              return {workerId:emp.workerId,name:matchedWorker.name,hours:emp.hours,perHourWage:matchedWorker.perHourWage};
+              return { workerId: emp.workerId, name: matchedWorker.name, hours: emp.hours, perHourWage: matchedWorker.perHourWage };
             } else {
               return null;
             }
           }).filter((worker: any) => worker ? true : false)
 
           project = await Project.findOneAndUpdate({ _id: projectId }, {
-            'installationData.workersData':[...mapedWorker]
+            'installationData.workersData': [...mapedWorker]
           }, {
             new: true
           })
@@ -396,7 +423,7 @@ export class ProjectService {
         }
       };
     } catch (err) {
-      console.log("Error occured while installation updates",err);
+      console.log("Error occured while installation updates", err);
       throw err;
     }
   };
@@ -519,24 +546,24 @@ export class ProjectService {
   }
 
   //status-count
-  statusCount = async ()=>{
+  statusCount = async () => {
     try {
       const result = await Project.aggregate([
         {
-          $group:{
-            _id:"$orderStatus",
-            count:{$sum:1},
+          $group: {
+            _id: "$orderStatus",
+            count: { $sum: 1 },
           }
         },
         {
-          $project:{
-            _id:0,
-            orderStatus:"$_id",
-            count:1
+          $project: {
+            _id: 0,
+            orderStatus: "$_id",
+            count: 1
           }
         }
       ]);
-      if(result){
+      if (result) {
         return result;
       }
       return {
