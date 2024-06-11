@@ -154,8 +154,7 @@ export class ProjectService {
           //if item_id exist in data set
           if (el.item_id) {
             //updates item with given data
-            // item = await Item.findByIdAndUpdate(el.item_id, el, { upsert: true, new: true });
-            item = await Item.findOne(el.item_id);
+            item = await Item.findByIdAndUpdate(el.item_id, el, { upsert: true, new: true });
           } else {
             //creates item with given data
             item = await Item.create(el);
@@ -186,7 +185,7 @@ export class ProjectService {
       }
       return project;
     } catch (err) {
-      console.log("Error Material Estimate order");
+      console.log("Error Material Estimate order",err);
       throw err;
     }
   };
