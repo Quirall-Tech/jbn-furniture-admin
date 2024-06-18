@@ -92,7 +92,7 @@ export class ProjectService {
       }
       //approve to next orderStatus
       if (data?.isApproved) {
-        project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.DRAWING }, { new: true }); //----------------------------
+        project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.WAITING_CONFIRMATION }, { new: true }); //----------------------------
       }
       if (project) {
         return project;
@@ -174,7 +174,7 @@ export class ProjectService {
         }
         //approve to next orderStatus
         if (data?.isApproved) {
-          project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.WAITING_CONFIRMATION }, { new: true }); //----------------------------
+          project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.MATERIAL_ARRIVAL }, { new: true }); //----------------------------
         }
       } else {
         return {
@@ -213,8 +213,12 @@ export class ProjectService {
           { new: true }
         );
       }
-      if (data.isApproved) {
-        project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.MATERIAL_ARRIVAL }, { new: true }); //----------------------------
+      if (data.isApproved && data.key) {
+        if(data.key === OrderStatus.WAITING_CONFIRMATION){
+          project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.DRAWING }, { new: true }); //----------------------------
+        }else{
+          project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.DELIVERY }, { new: true }); //----------------------------
+        }
       }
       if (project) {
         return project;
@@ -319,7 +323,7 @@ export class ProjectService {
 
       //if approved status updation to next step
       if (data.isApproved) {
-        project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.DELIVERY }, { new: true }); //----------------------------
+        project = await Project.findOneAndUpdate({ _id: projectId }, { orderStatus: OrderStatus.CLOSE_PAYMENT }, { new: true }); //----------------------------
       }
       if (project) {
         return project;
