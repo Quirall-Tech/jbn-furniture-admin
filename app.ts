@@ -26,6 +26,16 @@ const corsOptions = {
 const port = process.env.PORT || 3000;
 
 app.use(cors(corsOptions));
+// Middleware to log response headers (for debugging)
+app.use((req, res, next) => {
+  const originalSend = res.send;
+  res.send = function (body) {
+    console.log('Response Headers:');
+    console.log(res.getHeaders());  // Log the headers to verify CORS headers
+    originalSend.call(this, body);  // Continue the response process
+  };
+  next(); // Proceed to the next middleware or route handler
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
