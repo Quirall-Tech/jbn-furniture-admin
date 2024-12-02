@@ -37,6 +37,9 @@ app.use("/item", itemRouter);
 app.use("/user", userRouter);
 app.use("/emp", empRouter);
 
+// Optionally handle OPTIONS preflight requests
+app.options('*', cors(corsOptions)); // This ensures preflight requests are handled
+
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
 });
